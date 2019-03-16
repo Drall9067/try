@@ -22,10 +22,10 @@ stores = [
 def index():
     return app.send_static_file('index.html')
 
-# @app.route('/<path:path>')
-# def static_proxy(path):
-#     # send_static_file will guess the correct MIME type
-#     return app.send_static_file(path)
+@app.route('/<path:path>')
+def static_proxy(path):
+    # send_static_file will guess the correct MIME type
+    return app.send_static_file(path)
 
 class Store(Resource):
      def get(self):
@@ -42,5 +42,5 @@ class StoreName(Resource):
 api.add_resource(Store, '/api/stores')
 api.add_resource(StoreName, '/api/stores/<string:name>')
 
-if __name__ == '__main__':
-    app.run(port=5000)
+# if __name__ == '__main__':
+#     app.run(port=5000)
