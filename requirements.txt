@@ -1,3 +1,11 @@
 Flask
 Flask-RESTful
 Flask-Cors
+numpy
+scipy
+scikit-learn
+matplotlib
+opencv
+pandas
+keras
+tensorflow
