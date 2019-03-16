@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
+import os
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
@@ -42,5 +43,7 @@ class StoreName(Resource):
 api.add_resource(Store, '/api/stores')
 api.add_resource(StoreName, '/api/stores/<string:name>')
 
-# if __name__ == '__main__':
-#     app.run(port=5000)
+app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
+
+if __name__ == '__main__':
+	app.run(debug=False)
