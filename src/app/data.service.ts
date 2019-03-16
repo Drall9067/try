@@ -9,10 +9,10 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   getStore() {
-    return this.http.get('http://localhost:5000/api/stores');
+    return this.http.get('api/stores');
   }
 
   getStoreName(data) {
-    return this.http.get(`http://localhost:5000/api/stores/${data}`);
+    return this.http.get(`api/stores/${data}`);
   }
 }
