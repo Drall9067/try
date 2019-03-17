@@ -12,8 +12,8 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   sendOneFrame(front) {
-    return this.http.post(this.localURL+'api/image', { 'front' : front}).pipe(
-    // return this.http.post('api/oneImage', { 'front' : front }).pipe(
+    // return this.http.post(this.localURL+'api/image', { 'front' : front}).pipe(
+    return this.http.post('api/oneImage', { 'front' : front }).pipe(
       map((res) => {
         console.log("In pipe")
         console.log(res)
@@ -24,8 +24,8 @@ export class DataService {
   }
 
   sendTwoFrame(front,rear) {
-    return this.http.post(this.localURL+'api/image', { 'front' : front, 'rear' : rear }).pipe(
-    // return this.http.post('api/twoImage', { 'front' : front, 'rear' : rear }).pipe(
+    // return this.http.post(this.localURL+'api/image', { 'front' : front, 'rear' : rear }).pipe(
+    return this.http.post('api/twoImage', { 'front' : front, 'rear' : rear }).pipe(
       map((res) => {
         console.log("In pipe")
         console.log(res)
