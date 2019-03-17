@@ -91,30 +91,17 @@ export class DashboardComponent implements OnInit {
 
   pipeline() {
     var i=0,j=0;
-    for(i=0;i<2;i++){
-      
+    for(i=0;i<4;i++){
       this.triggerSnapshot();
       // console.log(this.webcamImage['imageAsBase64']);
       this.images.push(this.webcamImage['imageAsDataUrl']);
-      this.showNextWebcam(true);
 
       this.data_service.sendFrame(this.webcamImage['imageAsBase64']).subscribe((res)=>{
         console.log("Done!");
         this.status[j]=res['message'];
         j++;
+        this.showNextWebcam(true);
       });
-
-      this.triggerSnapshot();
-      // console.log(this.webcamImage['imageAsBase64']);
-      this.images.push(this.webcamImage['imageAsDataUrl']);
-      this.showNextWebcam(false);
-
-      this.data_service.sendFrame(this.webcamImage['imageAsBase64']).subscribe((res)=>{
-        console.log("Done!");
-        this.status[j]=res['message'];
-        j++;
-      });
-
     }
   }
 
