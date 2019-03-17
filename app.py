@@ -32,14 +32,12 @@ class imageAPI(Resource):
           data = json.loads(data)
 
           data_url = data['front']
-          offset = data_url.index(',')+1
-          img_bytes = base64.b64decode(data_url[offset:])
+          img_bytes = base64.b64decode(data_url)
           img_stream = BytesIO(img_bytes)
           frontImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
 
           data_url = data['rear']
-          offset = data_url.index(',')+1
-          img_bytes = base64.b64decode(data_url[offset:])
+          img_bytes = base64.b64decode(data_url)
           img_stream = BytesIO(img_bytes)
           rearImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
           

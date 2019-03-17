@@ -2,49 +2,63 @@
   Dashboard
 </h1>
 
-<div>
-  Device1 : {{ deviceList[0] }}
-</div>
-<div>
-  Device2 : {{ deviceList[1] }}
-</div>
-
-<div>
-  <button (click)="start()">START</button>
-</div>
-<div>
-  <button (click)="stop()">STOP</button>
-</div>
-<div>
-  <button (click)="getDevices()">Get Devices</button>
-</div>
-<div>
-  <button (click)="capture()">Capture</button>
+<div style="text-align:center">
+  <div>
+    <webcam [height]="320" [width]="180" [trigger]="triggerObservable1" (imageCapture)="handleImage1($event)"
+            *ngIf="showWebcam1" [allowCameraSwitch]="allowCameraSwitch1" [switchCamera]="nextWebcamObservable1"
+            [videoOptions]="videoOptions1" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched1($event)">
+    </webcam>
+    <br/>
+    <button class="actionBtn" (click)="triggerSnapshot1()">Take A Snapshot</button>
+    <button class="actionBtn" (click)="toggleWebcam1()">Toggle Webcam</button>
+    <br/>
+    <button class="actionBtn" (click)="showNextWebcam1(true)" [disabled]="!multipleWebcamsAvailable1">Next Webcam</button>
+  </div>
 </div>
 
-<div>
-  <video #frontVideoElement width="200" height="300" autoplay></video>
-  <video #rearVideoElement width="200" height="300" autoplay></video>
+<div style="text-align:center">
+  <div>
+    <webcam [height]="320" [width]="180" [trigger]="triggerObservable2" (imageCapture)="handleImage2($event)"
+            *ngIf="showWebcam2" [allowCameraSwitch]="allowCameraSwitch2" [switchCamera]="nextWebcamObservable2"
+            [videoOptions]="videoOptions2" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched2($event)">
+    </webcam>
+    <br/>
+    <button class="actionBtn" (click)="triggerSnapshot2()">Take A Snapshot</button>
+    <button class="actionBtn" (click)="toggleWebcam2()">Toggle Webcam</button>
+    <br/>
+    <button class="actionBtn" (click)="showNextWebcam2(true)" [disabled]="!multipleWebcamsAvailable2">Next Webcam</button>
+  </div>
 </div>
 
-<div>
-  <canvas #frontCanvasElement width="200" height="300"></canvas>
+<div style="text-align:center">
+  <button class="actionBtn" (click)="pipeline()">All</button>
+</div>
+
+<div class="snapshot" *ngIf="webcamImage1">
   <ul>
-      <li *ngFor="let c of frontImages">
-        <img src="{{ c }}" height="100" />
-      </li>
+    <li *ngFor="let img of images1">
+        <img [height]="150" [width]="150" [src]="img"/>
+    </li>
+  </ul>
+</div>
+
+<div class="snapshot" *ngIf="webcamImage2">
+  <ul>
+    <li *ngFor="let img of images2">
+        <img [height]="150" [width]="150" [src]="img"/>
+    </li>
   </ul>
 </div>
 
 <div>
-    <canvas #rearCanvasElement width="200" height="300"></canvas>
-    <ul>
-        <li *ngFor="let c of rearImages">
-          <img src="{{ c }}" height="100" />
-        </li>
-    </ul>
-  </div>
-
+  Status1 : {{ status[0] }}
+</div>
 <div>
-  Status : {{ status }}
+  Status2 : {{ status[1] }}
+</div>
+<div>
+  Status3 : {{ status[2] }}
+</div>
+<div>
+  Status4 : {{ status[3] }}
 </div>

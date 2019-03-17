@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../data.service';
 import { HttpClient } from '@angular/common/http';
-import 'webrtc-adapter';
+import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,149 +12,112 @@ import 'webrtc-adapter';
 })
 export class DashboardComponent implements OnInit {
 
-  deviceList: Array<any> = ["", ""];
+  images1: Array<any> = [];
+  images2: Array<any> = [];
 
-  @ViewChild('frontVideoElement') frontVideoElement: any;
-  frontVideo: any;
-  frontLocalStream: any;
-  @ViewChild('rearVideoElement') rearVideoElement: any;
-  rearVideo: any;
-  rearLocalStream: any;
+  status: string[] = ["Pending...","Pending...","Pending...","Pending..."];
 
-  @ViewChild('frontCanvasElement') frontCanvasElement: any;
-  frontCanvas: any;
-  @ViewChild('rearCanvasElement') rearCanvasElement: any;
-  rearCanvas: any;
+  showWebcam1 = true;
+  allowCameraSwitch1 = true;
+  multipleWebcamsAvailable1 = false;
+  deviceId1: string;
+  videoOptions1: MediaTrackConstraints = { };
+  webcamImage1: WebcamImage = null;
+  trigger1: Subject<void> = new Subject<void>();
+  nextWebcam1: Subject<boolean|string> = new Subject<boolean|string>();
 
-  frontImages: Array<any>;
-  rearImages: Array<any>;
-
-  status: string = "";
+  showWebcam2 = true;
+  allowCameraSwitch2 = true;
+  multipleWebcamsAvailable2 = false;
+  deviceId2: string;
+  videoOptions2: MediaTrackConstraints = { };
+  webcamImage2: WebcamImage = null;
+  trigger2: Subject<void> = new Subject<void>();
+  nextWebcam2: Subject<boolean|string> = new Subject<boolean|string>();
 
   constructor(private data_service: DataService, private http: HttpClient) { }
 
   ngOnInit() {
-    this.frontVideo = this.frontVideoElement.nativeElement;
-    this.rearVideo = this.rearVideoElement.nativeElement;
-
-    this.frontCanvas = this.frontCanvasElement.nativeElement;
-    this.rearCanvas = this.rearCanvasElement.nativeElement;
-
-    this.frontImages = [];
-    this.rearImages = [];
-  }
-
-  initCamera() {
-    var browser = <any>navigator;
-
-    browser.getUserMedia = (browser.getUserMedia ||
-      browser.webkitGetUserMedia ||
-      browser.mozGetUserMedia ||
-      browser.msGetUserMedia);
-
-    if (!browser.mediaDevices || !browser.mediaDevices.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
-      return;
-    }
-
-    var frontConfig = {
-      video : {
-        deviceId : {
-          exact : this.deviceList[0]
-        }
-      },
-      audio : false
-    }
-    browser.mediaDevices.getUserMedia(frontConfig).then(stream => {
-      this.frontLocalStream = stream;
-      this.frontVideo.srcObject = stream;
-      this.frontVideo.play();
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
-    var rearConfig = {
-      video : {
-        deviceId : {
-          exact : this.deviceList[1]
-        }
-      },
-      audio : false
-    }
-    browser.mediaDevices.getUserMedia(rearConfig)
-    .then(stream => {
-      this.rearLocalStream = stream;
-      this.rearVideo.srcObject = stream;
-      this.rearVideo.play();
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-  }
-
-  start() {
-    this.initCamera();
-  }
-
-  stop() {
-    if (this.frontLocalStream) {
-      this.frontVideo.pause();
-      this.frontLocalStream.getTracks()[0].stop();
-    }
-    if (this.rearLocalStream) {
-      this.rearVideo.pause();
-      this.rearLocalStream.getTracks()[0].stop();
-    }
-  }
-
-  capture() {
-    var context = this.frontCanvas.getContext('2d').drawImage(this.frontVideo,0,0,200,300);
-    this.frontImages.push(this.frontCanvas.toDataURL());
-    // console.log(this.frontCanvas.toDataURL());
-
-    var context = this.rearCanvas.getContext('2d').drawImage(this.rearVideo,0,0,200,300);
-    this.rearImages.push(this.rearCanvas.toDataURL());
-    // console.log(this.rearCanvas.toDataURL());
-
-    var frontData = this.frontCanvas.toDataURL();
-    var rearData = this.rearCanvas.toDataURL();
-
-    this.data_service.sendFrame(frontData, rearData).subscribe((res) =>{
-      console.log("In subscribe")
-      console.log(res)
-      console.log("Out subscribe")
-      this.status = res['message']
-    });
-  }
-
-  getDevices() {
-    var browser = <any>navigator;
-
-    browser.getUserMedia = (browser.getUserMedia ||
-      browser.webkitGetUserMedia ||
-      browser.mozGetUserMedia ||
-      browser.msGetUserMedia);
-
-    if (!browser.mediaDevices || !browser.mediaDevices.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
-      return;
-    }
-
-    var i = 0;
-    return browser.mediaDevices.enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device) => {
-        if(device['kind'] === "videoinput") {
-          console.log(device)
-          this.deviceList[i] = device['deviceId'];
-          i++;
-        }
+    WebcamUtil.getAvailableVideoInputs()
+      .then((mediaDevices: MediaDeviceInfo[]) => {
+        this.multipleWebcamsAvailable1 = mediaDevices && mediaDevices.length > 1;
+        this.multipleWebcamsAvailable2 = mediaDevices && mediaDevices.length > 1;
+        this.showNextWebcam2(true);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }
+
+  triggerSnapshot1() {
+    this.trigger1.next();
+  }
+  toggleWebcam1() {
+    this.showWebcam1 = !this.showWebcam1;
+  }
+  showNextWebcam1(directionOrDeviceId: boolean|string) {
+    // true => move forward through devices
+    // false => move backwards through devices
+    // string => move to device with given deviceId
+    this.nextWebcam1.next(directionOrDeviceId);
+  }
+  handleImage1(webcamImage: WebcamImage) {
+    console.info('received webcam image', webcamImage);
+    // console.info('received webcam image', webcamImage['imageAsBase64']);
+    this.images1.push(webcamImage['imageAsDataUrl']);
+    this.webcamImage1 = webcamImage;
+  }
+  cameraWasSwitched1(deviceId: string) {
+    console.log('active device: ' + deviceId);
+    this.deviceId1 = deviceId;
+  }
+  get triggerObservable1(): Observable<void> {
+    return this.trigger1.asObservable();
+  }
+  get nextWebcamObservable1(): Observable<boolean|string> {
+    return this.nextWebcam1.asObservable();
+  }
+
+  triggerSnapshot2() {
+    this.trigger2.next();
+  }
+  toggleWebcam2() {
+    this.showWebcam2 = !this.showWebcam2;
+  }
+  showNextWebcam2(directionOrDeviceId: boolean|string) {
+    // true => move forward through devices
+    // false => move backwards through devices
+    // string => move to device with given deviceId
+    this.nextWebcam2.next(directionOrDeviceId);
+  }
+  handleImage2(webcamImage: WebcamImage) {
+    console.info('received webcam image', webcamImage);
+    // console.info('received webcam image', webcamImage['imageAsBase64']);
+    this.images2.push(webcamImage['imageAsDataUrl']);
+    this.webcamImage2 = webcamImage;
+  }
+  cameraWasSwitched2(deviceId: string) {
+    console.log('active device: ' + deviceId);
+    this.deviceId2 = deviceId;
+  }
+  get triggerObservable2(): Observable<void> {
+    return this.trigger2.asObservable();
+  }
+  get nextWebcamObservable2(): Observable<boolean|string> {
+    return this.nextWebcam2.asObservable();
+  }
+
+
+  pipeline() {
+    var i;
+    for(i=0; i<4; i++){
+      this.triggerSnapshot1();
+      this.triggerSnapshot2();
+
+      this.data_service.sendFrame(this.webcamImage1['imageAsBase64'], this.webcamImage2['imageAsBase64'])
+      .subscribe((res) => {
+        console.log("Done");
+        console.log(i);
+        this.status[i] = res['message'];
+      });
+    }
   }
 
 }
