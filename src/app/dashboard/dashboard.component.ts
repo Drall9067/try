@@ -70,17 +70,23 @@ export class DashboardComponent implements OnInit {
 
       this.data_service.sendFrame(this.webcamImage['imageAsBase64'])
       .subscribe((res) => {
-        console.log("Image Sent...")
-        resolve('Done')
+        console.log("Image Sent...");
+        resolve('Done');
       });
     });
+  }
+
+  async newFunc() {
+    await this.showNextWebcam(true);
   }
 
   switchCamera() {
     return new Promise((resolve, reject) => {
       console.log("Switching Camera...");
-      this.showNextWebcam(true);
-      resolve('Done')
+      this.newFunc().then(()=>{
+        console.log('Camera Switched...');
+        resolve('Done');
+      });
     });
   }
 
@@ -89,10 +95,10 @@ export class DashboardComponent implements OnInit {
     for(i=0; i<2; i++) {
       await this.sendImage()
       .then(()=>{
-        console.log("Image Sent!!!")
+        console.log("Image Sent!!!");
         this.switchCamera()
         .then(()=>{
-          console.log("Camera Switched!!!")
+          console.log("Camera Switched!!!");
         })
       });
     }
