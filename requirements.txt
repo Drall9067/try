@@ -2,10 +2,10 @@ Flask
 Flask-RESTful
 Flask-Cors
 numpy
-pandas
-scipy
-scikit-learn
-matplotlib
+# pandas
+# scipy
+# scikit-learn
+# matplotlib
 opencv-python-headless
-keras
-tensorflow
+# keras
+# tensorflow
