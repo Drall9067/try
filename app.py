@@ -58,15 +58,25 @@ class ImageAPI(Resource):
           data = request.data
           data = data.decode("utf-8")
           data = json.loads(data)
-          
-          data_url = data['imageAsBase64']
-          img_bytes = base64.b64decode(data_url)
 
+          data_url = data['front']
+          offset = data_url.index(',')+1
+          img_bytes = base64.b64decode(data_url[offset:])
           img_stream = BytesIO(img_bytes)
-          img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+          frontImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+
+          data_url = data['front']
+          offset = data_url.index(',')+1
+          img_bytes = base64.b64decode(data_url[offset:])
+          img_stream = BytesIO(img_bytes)
+          rearImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
           
-          print(img.shape)
-          msg = 'Success. Image Size = '+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])
+          
+          print(frontImg.shape)
+          print(rearImg.shape)
+          msg = 'Success. Image Sizes => '
+          msg += 'FrontImg = ('+str(frontImg.shape[0])+','+str(frontImg.shape[1])+','+str(frontImg.shape[2])+') '
+          msg += 'RearImg = ('+str(rearImg.shape[0])+','+str(rearImg.shape[1])+','+str(rearImg.shape[2])+') '
           return { 'message' : msg }
 
 api.add_resource(ImageAPI, '/api/image')
@@ -74,4 +84,5 @@ api.add_resource(ImageAPI, '/api/image')
 app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
 if __name__ == '__main__':
-	app.run(debug=False)
+     app.run(debug=False)
+	# app.run(port=5000,debug=False)
