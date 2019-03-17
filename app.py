@@ -45,7 +45,9 @@ class imageAPI(Resource):
           
           
           print(frontImg.shape)
+          print(frontImg)
           print(rearImg.shape)
+          print(rearImg)
           msg = 'Success. Image Size => '
           msg += 'FrontImg = ('+str(frontImg.shape[0])+','+str(frontImg.shape[1])+','+str(frontImg.shape[2])+') '
           msg += 'RearImg = ('+str(rearImg.shape[0])+','+str(rearImg.shape[1])+','+str(rearImg.shape[2])+') '
