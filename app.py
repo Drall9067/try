@@ -29,10 +29,10 @@ stores = [
 def index():
     return app.send_static_file('index.html')
 
-# @app.route('/<path:path>')
-# def static_proxy(path):
-#     # send_static_file will guess the correct MIME type
-#     return app.send_static_file(path)
+@app.route('/<path:path>')
+def static_proxy(path):
+    # send_static_file will guess the correct MIME type
+    return app.send_static_file(path)
 
 class Store(Resource):
      def get(self):
@@ -59,16 +59,15 @@ class ImageAPI(Resource):
           data = data.decode("utf-8")
           data = json.loads(data)
           
-          data_url = data['imageBase64']
-          offset = data_url.index(',')+1
-          img_bytes = base64.b64decode(data_url[offset:])
+          data_url = data['imageAsBase64']
+          img_bytes = base64.b64decode(data_url)
 
           img_stream = BytesIO(img_bytes)
           img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
           
           print(img.shape)
-          print("Done...")
-          return { 'message' : 'Success' }
+          msg = 'Success. Image Size = '+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])
+          return { 'message' : msg }
 
 api.add_resource(ImageAPI, '/api/image')
 
