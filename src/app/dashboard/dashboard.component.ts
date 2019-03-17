@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
     this.nextWebcam.next(directionOrDeviceId);
   }
   handleImage(webcamImage: WebcamImage) {
-    console.info('received webcam image', webcamImage);
+    // console.info('received webcam image', webcamImage);
     // console.info('received webcam image', webcamImage['imageAsBase64']);
     this.images.push(webcamImage['imageAsDataUrl']);
     this.webcamImage = webcamImage;
@@ -63,14 +63,37 @@ export class DashboardComponent implements OnInit {
     return this.nextWebcam.asObservable();
   }
 
-  pipeline() {
-    var i;
-    for(i=0; i<4; i++){
+  sendImage() {
+    return new Promise((resolve, reject) => {
+      console.log("Sending Image...");
       this.triggerSnapshot();
 
       this.data_service.sendFrame(this.webcamImage['imageAsBase64'])
       .subscribe((res) => {
-        this.showNextWebcam(true);
+        console.log("Image Sent...")
+        resolve('Done')
+      });
+    });
+  }
+
+  switchCamera() {
+    return new Promise((resolve, reject) => {
+      console.log("Switching Camera...");
+      this.showNextWebcam(true);
+      resolve('Done')
+    });
+  }
+
+  async pipeline() {
+    var i;
+    for(i=0; i<2; i++) {
+      await this.sendImage()
+      .then(()=>{
+        console.log("Image Sent!!!")
+        this.switchCamera()
+        .then(()=>{
+          console.log("Camera Switched!!!")
+        })
       });
     }
   }
