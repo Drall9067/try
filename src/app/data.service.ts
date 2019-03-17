@@ -21,9 +21,9 @@ export class DataService {
     return this.http.get(`api/stores/${data}`);
   }
 
-  sendFrame(data) {
-    // return this.http.post(this.localURL+'api/image', { 'imageAsBase64' : data }).pipe(
-    return this.http.post('api/image', { 'imageAsBase64' : data }).pipe(
+  sendFrame(front,rear) {
+    // return this.http.post(this.localURL+'api/image', { 'front' : front, 'rear' : rear }).pipe(
+    return this.http.post('api/image', { 'front' : front, 'rear' : rear }).pipe(
       map((res) => {
         console.log("In pipe")
         console.log(res)

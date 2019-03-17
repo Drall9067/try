@@ -2,45 +2,46 @@
   Dashboard
 </h1>
 
-<div style="text-align:center">
-  <div>
-    <webcam [height]="320" [width]="180" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
-            *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
-            [videoOptions]="videoOptions" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)">
-    </webcam>
-    <br/>
-    <button class="actionBtn" (click)="triggerSnapshot()">Take A Snapshot</button>
-    <button class="actionBtn" (click)="toggleWebcam()">Toggle Webcam</button>
-    <br/>
-    <button class="actionBtn" (click)="showNextWebcam(true)" [disabled]="!multipleWebcamsAvailable">Next Webcam</button>
-    <button class="actionBtn" (click)="pipeline()">All at once</button>
-  </div>
+<div>
+  <button (click)="start()">START</button>
+</div>
+<div>
+  <button (click)="stop()">STOP</button>
+</div>
+<div>
+  <button (click)="capture()">Capture</button>
 </div>
 
-<div class="snapshot" *ngIf="webcamImage">
+<div>
+  <video #frontVideoElement width="200" height="300" autoplay></video>
+  <video #rearVideoElement width="200" height="300" autoplay></video>
+</div>
+
+<div>
+  <canvas #frontCanvasElement width="200" height="300"></canvas>
   <ul>
-    <li *ngFor="let img of images">
-        <img [height]="150" [width]="150" [src]="img"/>
-    </li>
+      <li *ngFor="let c of frontImages">
+        <img src="{{ c }}" height="100" />
+      </li>
   </ul>
 </div>
 
 <div>
-  Status1 : {{ status[0] }}
-</div>
+    <canvas #rearCanvasElement width="200" height="300"></canvas>
+    <ul>
+        <li *ngFor="let c of rearImages">
+          <img src="{{ c }}" height="100" />
+        </li>
+    </ul>
+  </div>
+
 <div>
-  Status2 : {{ status[1] }}
-</div>
-<div>
-  Status3 : {{ status[2] }}
-</div>
-<div>
-  Status4 : {{ status[3] }}
+  Status : {{ status }}
 </div>
 
 <h2>Stores</h2>
 <ul>
-  <li *ngFor="let store of storeData">
+  <li *ngFor="let store of data">
     <h3>
       {{ store.name }}
     </h3>
@@ -54,7 +55,7 @@
 
 <h3>My Wonderful Store</h3>
 <ul>
-  <li *ngFor="let item of storeName">
+  <li *ngFor="let item of dataName">
     {{ item.name }}, {{ item.price }}
   </li>
 </ul>
