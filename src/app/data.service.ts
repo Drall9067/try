@@ -9,12 +9,9 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  sendFrame(front,rear) {
-    return this.http.post('api/image', { 'front' : front, 'rear' : rear }).pipe(
+  sendFrame(frame) {
+    return this.http.post('api/image', { 'frame' : frame }).pipe(
       map((res) => {
-        console.log("In pipe")
-        console.log(res)
-        console.log("Out pipe")
         return res
       })
     );
