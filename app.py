@@ -7,7 +7,6 @@ from io import BytesIO
 import numpy as np
 import cv2
 import json
-import matplotlib.pyplot as plt
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
