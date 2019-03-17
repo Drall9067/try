@@ -3,10 +3,20 @@
 </h1>
 
 <div>
+  Device1 : {{ deviceList[0] }}
+</div>
+<div>
+  Device2 : {{ deviceList[1] }}
+</div>
+
+<div>
   <button (click)="start()">START</button>
 </div>
 <div>
   <button (click)="stop()">STOP</button>
+</div>
+<div>
+  <button (click)="getDevices()">Get Devices</button>
 </div>
 <div>
   <button (click)="capture()">Capture</button>

@@ -10,6 +10,8 @@ import 'webrtc-adapter';
 })
 export class DashboardComponent implements OnInit {
 
+  deviceList: Array<any> = ["", ""];
+
   @ViewChild('frontVideoElement') frontVideoElement: any;
   frontVideo: any;
   frontLocalStream: any;
@@ -54,29 +56,38 @@ export class DashboardComponent implements OnInit {
     }
 
     var frontConfig = {
-      audio : false,
       video : {
-        facingMode : "user"
-      }
+        deviceId : {
+          exact : this.deviceList[0]
+        }
+      },
+      audio : false
     }
     browser.mediaDevices.getUserMedia(frontConfig).then(stream => {
       this.frontLocalStream = stream;
       this.frontVideo.srcObject = stream;
       this.frontVideo.play();
+    })
+    .catch((err) => {
+      console.log(err)
     });
 
     var rearConfig = {
-      audio : false,
       video : {
-        facingMode : {
-          exact : "environment"
+        deviceId : {
+          exact : this.deviceList[1]
         }
-      }
+      },
+      audio : false
     }
-    browser.mediaDevices.getUserMedia(rearConfig).then(stream => {
+    browser.mediaDevices.getUserMedia(rearConfig)
+    .then(stream => {
       this.rearLocalStream = stream;
       this.rearVideo.srcObject = stream;
       this.rearVideo.play();
+    })
+    .catch((err) => {
+      console.log(err)
     });
   }
 
@@ -112,6 +123,35 @@ export class DashboardComponent implements OnInit {
       console.log(res)
       console.log("Out subscribe")
       this.status = res['message']
+    });
+  }
+
+  getDevices() {
+    var browser = <any>navigator;
+
+    browser.getUserMedia = (browser.getUserMedia ||
+      browser.webkitGetUserMedia ||
+      browser.mozGetUserMedia ||
+      browser.msGetUserMedia);
+
+    if (!browser.mediaDevices || !browser.mediaDevices.enumerateDevices) {
+      console.log("enumerateDevices() not supported.");
+      return;
+    }
+
+    var i = 0;
+    return browser.mediaDevices.enumerateDevices()
+    .then((devices) => {
+      devices.forEach((device) => {
+        if(device['kind'] === "videoinput") {
+          console.log(device)
+          this.deviceList[i] = device['deviceId'];
+          i++;
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
   }
 
