@@ -11,19 +11,21 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  getStore() {
-    // return this.http.get(this.localURL+'api/stores');
-    return this.http.get('api/stores');
+  sendOneFrame(front) {
+    return this.http.post(this.localURL+'api/image', { 'front' : front}).pipe(
+    // return this.http.post('api/oneImage', { 'front' : front }).pipe(
+      map((res) => {
+        console.log("In pipe")
+        console.log(res)
+        console.log("Out pipe")
+        return res
+      })
+    );
   }
 
-  getStoreName(data) {
-    // return this.http.get(this.localURL+`api/stores/${data}`);
-    return this.http.get(`api/stores/${data}`);
-  }
-
-  sendFrame(front,rear) {
-    // return this.http.post(this.localURL+'api/image', { 'front' : front, 'rear' : rear }).pipe(
-    return this.http.post('api/image', { 'front' : front, 'rear' : rear }).pipe(
+  sendTwoFrame(front,rear) {
+    return this.http.post(this.localURL+'api/image', { 'front' : front, 'rear' : rear }).pipe(
+    // return this.http.post('api/twoImage', { 'front' : front, 'rear' : rear }).pipe(
       map((res) => {
         console.log("In pipe")
         console.log(res)

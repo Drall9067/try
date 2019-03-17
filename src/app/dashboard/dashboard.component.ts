@@ -10,8 +10,7 @@ import { map } from 'rxjs/operators';
 })
 export class DashboardComponent implements OnInit {
 
-  data: any;
-  dataName: any;
+  deviceList: Array<any> = [];
 
   @ViewChild('frontVideoElement') frontVideoElement: any;
   frontVideo: any;
@@ -41,19 +40,10 @@ export class DashboardComponent implements OnInit {
 
     this.frontImages = [];
     this.rearImages = [];
-
-    this.data_service.getStore().subscribe((res) => {
-      console.log(res);
-      this.data = res['stores'];
-    });
-
-    this.data_service.getStoreName('My Wonderful Store').subscribe((res) => {
-      console.log(res);
-      this.dataName = res['items'];
-    });
   }
 
   initCamera() {
+    this.deviceList = []
     var browser = <any>navigator;
 
     browser.getUserMedia = (browser.getUserMedia ||
@@ -61,31 +51,44 @@ export class DashboardComponent implements OnInit {
       browser.mozGetUserMedia ||
       browser.msGetUserMedia);
 
-    var config = {
-      audio : false,
-      video : {
-        facingMode: "user"
-      }
+    if (!browser.mediaDevices || !browser.mediaDevices.enumerateDevices) {
+      console.log("enumerateDevices() not supported.");
+      return;
     }
 
-    browser.mediaDevices.getUserMedia(config).then(stream => {
+    browser.mediaDevices.enumerateDevices().then((devices) => {
+      devices.forEach((device) => {
+        if(device.kind=="videoinput"){
+          this.deviceList.push(device.deviceId)
+        }
+      });
+    });
+
+    var frontConfig = {
+      audio : false,
+      video : true,
+      deviceId : this.deviceList[0]
+    }
+
+    browser.mediaDevices.getUserMedia(frontConfig).then(stream => {
       this.frontLocalStream = stream;
       this.frontVideo.srcObject = stream;
       this.frontVideo.play();
     });
 
-    config = {
-      audio : false,
-      video : {
-        facingMode: "environment"
+    if(this.deviceList.length>1) {
+      var rearConfig = {
+        audio : false,
+        video : true,
+        deviceId : this.deviceList[1]
       }
-    }
 
-    browser.mediaDevices.getUserMedia(config).then(stream => {
-      this.rearLocalStream = stream;
-      this.rearVideo.srcObject = stream;
-      this.rearVideo.play();
-    });
+      browser.mediaDevices.getUserMedia(rearConfig).then(stream => {
+        this.rearLocalStream = stream;
+        this.rearVideo.srcObject = stream;
+        this.rearVideo.play();
+      });
+    }
   }
 
   start() {
@@ -108,19 +111,29 @@ export class DashboardComponent implements OnInit {
     this.frontImages.push(this.frontCanvas.toDataURL());
     // console.log(this.frontCanvas.toDataURL());
 
-    context = this.rearCanvas.getContext('2d').drawImage(this.frontVideo,0,0,200,300);
+    context = this.rearCanvas.getContext('2d').drawImage(this.rearVideo,0,0,200,300);
     this.rearImages.push(this.rearCanvas.toDataURL());
     // console.log(this.rearCanvas.toDataURL());
 
     var frontData = this.frontCanvas.toDataURL();
     var rearData = this.rearCanvas.toDataURL();
 
-    this.data_service.sendFrame(frontData,rearData).subscribe((res) =>{
+    if(this.deviceList.length>1) {
+      this.data_service.sendTwoFrame(frontData,rearData).subscribe((res) =>{
         console.log("In subscribe")
         console.log(res)
         console.log("Out subscribe")
         this.status = res['message']
-    });
+      });
+    }
+    else {
+      this.data_service.sendOneFrame(frontData).subscribe((res) =>{
+        console.log("In subscribe")
+        console.log(res)
+        console.log("Out subscribe")
+        this.status = res['message']
+      });
+    }
   }
 
 }

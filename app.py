@@ -13,18 +13,6 @@ app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
 CORS(app)
 
-stores = [
-     {
-          'name': 'My Wonderful Store',
-          'items': [
-               {
-                    'name': 'My Item',
-                    'price': 15.99
-               }
-          ]
-     }
-]
-
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -34,22 +22,7 @@ def static_proxy(path):
     # send_static_file will guess the correct MIME type
     return app.send_static_file(path)
 
-class Store(Resource):
-     def get(self):
-          data = { 'stores' : stores }
-          return jsonify(data)
-
-class StoreName(Resource):
-     def get(self, name):
-          for store in stores:
-               if store['name']==name:
-                    return store
-          return jsonify({ 'error' : 'Store not found' })
-
-api.add_resource(Store, '/api/stores')
-api.add_resource(StoreName, '/api/stores/<string:name>')
-
-class ImageAPI(Resource):
+class oneImageAPI(Resource):
      def get(self):
           pass
 
@@ -65,7 +38,28 @@ class ImageAPI(Resource):
           img_stream = BytesIO(img_bytes)
           frontImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
 
+          print(frontImg.shape)
+          msg = 'Success. Image Sizes => '
+          msg += 'FrontImg = ('+str(frontImg.shape[0])+','+str(frontImg.shape[1])+','+str(frontImg.shape[2])+') '
+          return { 'message' : msg }
+
+class twoImageAPI(Resource):
+     def get(self):
+          pass
+
+     def post(self):
+          print("Starting...")
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
+
           data_url = data['front']
+          offset = data_url.index(',')+1
+          img_bytes = base64.b64decode(data_url[offset:])
+          img_stream = BytesIO(img_bytes)
+          frontImg = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+
+          data_url = data['rear']
           offset = data_url.index(',')+1
           img_bytes = base64.b64decode(data_url[offset:])
           img_stream = BytesIO(img_bytes)
@@ -74,12 +68,13 @@ class ImageAPI(Resource):
           
           print(frontImg.shape)
           print(rearImg.shape)
-          msg = 'Success. Image Sizes => '
+          msg = 'Success. Image Size => '
           msg += 'FrontImg = ('+str(frontImg.shape[0])+','+str(frontImg.shape[1])+','+str(frontImg.shape[2])+') '
           msg += 'RearImg = ('+str(rearImg.shape[0])+','+str(rearImg.shape[1])+','+str(rearImg.shape[2])+') '
           return { 'message' : msg }
 
-api.add_resource(ImageAPI, '/api/image')
+api.add_resource(oneImageAPI, '/api/oneImage')
+api.add_resource(twoImageAPI, '/api/twoImage')
 
 app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
