@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
 
   images: Array<any> = [];
 
-  status: string[] = ["Pending...","Pending...","Pending...","Pending..."];
+  status: string;
 
   showWebcam = true;
   allowCameraSwitch = true;
@@ -25,13 +25,22 @@ export class DashboardComponent implements OnInit {
   trigger: Subject<void> = new Subject<void>();
   nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
 
+  mlEngine: boolean;
+  timer: any;
+  functionality: string;
+  frontCamera: boolean;
+
   constructor(private data_service: DataService, private http: HttpClient) { }
 
   ngOnInit() {
     WebcamUtil.getAvailableVideoInputs()
-      .then((mediaDevices: MediaDeviceInfo[]) => {
-        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
-      });
+    .then((mediaDevices: MediaDeviceInfo[]) => {
+      this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
+    });
+    this.status = "";
+    this.mlEngine = false;
+    this.functionality = "Detecting Drowsiness and Expressions";
+    this.frontCamera = true;
   }
 
   triggerSnapshot() {
@@ -44,6 +53,13 @@ export class DashboardComponent implements OnInit {
     // true => move forward through devices
     // false => move backwards through devices
     // string => move to device with given deviceId
+    this.frontCamera = !this.frontCamera;
+    if(this.frontCamera) {
+      this.functionality = "Detecting Drowsiness and Expressions"
+    }
+    else {
+      this.functionality = "Detecting Vehicles and Persons"
+    }
     this.nextWebcam.next(directionOrDeviceId);
   }
   handleImage(webcamImage: WebcamImage) {
@@ -68,40 +84,37 @@ export class DashboardComponent implements OnInit {
       console.log("Sending Image...");
       this.triggerSnapshot();
 
-      this.data_service.sendFrame(this.webcamImage['imageAsBase64'])
-      .subscribe((res) => {
-        console.log("Image Sent...");
-        resolve('Done');
-      });
+      if(this.frontCamera) {
+        this.data_service.sendFrontFrame(this.webcamImage['imageAsBase64'])
+        .subscribe((res) => {
+          this.status = res['message'];
+          console.log("Front Image Sent");
+          resolve('Done');
+        });
+      }
+      else {
+        this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
+        .subscribe((res) => {
+          this.status = res['message'];
+          console.log("Rear Image Sent");
+          resolve('Done');
+        });
+      }
+      
     });
   }
 
-  async newFunc() {
-    await this.showNextWebcam(true);
+  startPipeline() {
+    this.mlEngine = true;
+    this.timer = setInterval(async ()=>{
+      await this.sendImage();
+    },100);
   }
 
-  switchCamera() {
-    return new Promise((resolve, reject) => {
-      console.log("Switching Camera...");
-      this.newFunc().then(()=>{
-        console.log('Camera Switched...');
-        resolve('Done');
-      });
-    });
-  }
-
-  async pipeline() {
-    var i;
-    for(i=0; i<2; i++) {
-      await this.sendImage()
-      .then(()=>{
-        console.log("Image Sent!!!");
-        this.switchCamera()
-        .then(()=>{
-          console.log("Camera Switched!!!");
-        })
-      });
-    }
+  stopPipeline() {
+    this.mlEngine = false;
+    clearInterval(this.timer);
+    this.status = "";
   }
 
 }

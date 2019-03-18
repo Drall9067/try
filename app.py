@@ -21,7 +21,7 @@ def static_proxy(path):
     # send_static_file will guess the correct MIME type
     return app.send_static_file(path)
 
-class imageAPI(Resource):
+class frontAPI(Resource):
      def get(self):
           pass
 
@@ -31,18 +31,40 @@ class imageAPI(Resource):
           data = data.decode("utf-8")
           data = json.loads(data)
 
-          data_url = data['frame']
+          data_url = data['image']
           img_bytes = base64.b64decode(data_url)
           img_stream = BytesIO(img_bytes)
           img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
 
           print(img.shape)
           print(img)
-          msg = 'Success. Image Size => '
-          msg += 'FrontImg = ('+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])+') '
+          msg = 'Success. Front Image => '
+          msg += '('+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])+') '
           return { 'message' : msg }
 
-api.add_resource(imageAPI, '/api/image')
+class rearAPI(Resource):
+     def get(self):
+          pass
+
+     def post(self):
+          print("Starting...")
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
+
+          data_url = data['image']
+          img_bytes = base64.b64decode(data_url)
+          img_stream = BytesIO(img_bytes)
+          img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+
+          print(img.shape)
+          print(img)
+          msg = 'Success. Rear Image => '
+          msg += '('+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])+') '
+          return { 'message' : msg }
+
+api.add_resource(frontAPI, '/api/frontImage')
+api.add_resource(rearAPI, '/api/rearImage')
 
 # app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
