@@ -2,34 +2,6 @@
   Dashboard
 </h1>
 
-<h3 style="text-align:center">
-  {{ functionality }}
-</h3>
-<div style="text-align:center">
-  <div>
-    <webcam [height]="180" [width]="320" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
-            *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
-            [videoOptions]="videoOptions" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)">
-    </webcam>
-  </div>
-  <div>
-    <button class="actionBtn" (click)="showNextWebcam(true)" [disabled]="!multipleWebcamsAvailable">Switch Camera</button>
-  </div>
-</div>
+<app-dashbar></app-dashbar>
 
-<div style="text-align:center">
-  <button class="actionBtn" (click)="startPipeline()" [disabled]="mlEngine">START</button>
-  <button class="actionBtn" (click)="stopPipeline()" [disabled]="!mlEngine">STOP</button>
-</div>
-
-<div>
-  Status : {{ status }}
-</div>
-
-<div class="snapshot" *ngIf="webcamImage">
-  <ul>
-    <li *ngFor="let img of images">
-        <img [height]="90" [width]="160" [src]="img"/>
-    </li>
-  </ul>
-</div>
+<router-outlet></router-outlet>
