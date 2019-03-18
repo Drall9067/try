@@ -16,6 +16,10 @@ import { RegisterComponent } from './register/register.component';
 import { WebcamModule } from 'ngx-webcam';
 import { FormsModule } from '@angular/forms';
 import 'webrtc-adapter';
+import { DashbarComponent } from './dashbar/dashbar.component';
+import { ProfileComponent } from './profile/profile.component';
+import { HistoryComponent } from './history/history.component';
+import { EngineComponent } from './engine/engine.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import 'webrtc-adapter';
     LoginComponent,
     DashboardComponent,
     NavbarComponent,
-    RegisterComponent
+    RegisterComponent,
+    DashbarComponent,
+    ProfileComponent,
+    HistoryComponent,
+    EngineComponent
   ],
   imports: [
     BrowserModule,
