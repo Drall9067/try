@@ -2,41 +2,34 @@
   Dashboard
 </h1>
 
+<h3 style="text-align:center">
+  {{ functionality }}
+</h3>
 <div style="text-align:center">
   <div>
-    <webcam [height]="320" [width]="180" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+    <webcam [height]="180" [width]="320" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
             *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
             [videoOptions]="videoOptions" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)">
     </webcam>
-    <br/>
-    <button class="actionBtn" (click)="triggerSnapshot()">Take A Snapshot</button>
-    <button class="actionBtn" (click)="toggleWebcam()">Toggle Webcam</button>
-    <br/>
-    <button class="actionBtn" (click)="showNextWebcam(true)" [disabled]="!multipleWebcamsAvailable">Next Webcam</button>
+  </div>
+  <div>
+    <button class="actionBtn" (click)="showNextWebcam(true)" [disabled]="!multipleWebcamsAvailable">Switch Camera</button>
   </div>
 </div>
 
 <div style="text-align:center">
-  <button class="actionBtn" (click)="pipeline()">All</button>
+  <button class="actionBtn" (click)="startPipeline()" [disabled]="mlEngine">START</button>
+  <button class="actionBtn" (click)="stopPipeline()" [disabled]="!mlEngine">STOP</button>
+</div>
+
+<div>
+  Status : {{ status }}
 </div>
 
 <div class="snapshot" *ngIf="webcamImage">
   <ul>
     <li *ngFor="let img of images">
-        <img [height]="150" [width]="150" [src]="img"/>
+        <img [height]="90" [width]="160" [src]="img"/>
     </li>
   </ul>
-</div>
-
-<div>
-  Status1 : {{ status[0] }}
-</div>
-<div>
-  Status2 : {{ status[1] }}
-</div>
-<div>
-  Status3 : {{ status[2] }}
-</div>
-<div>
-  Status4 : {{ status[3] }}
 </div>
