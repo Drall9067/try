@@ -5,7 +5,6 @@ import json
 import base64
 import numpy as np
 from io import BytesIO
-import matplotlib.pyplot as plt
 from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
