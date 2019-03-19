@@ -79,7 +79,7 @@ class rearAPI(Resource):
           img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
           img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
-          data = engine.detectVehicle(img)
+          data = engine.detectVehicles(img)
           print("Data",data,sep=" : ")
           return { 'message' : data }
 
