@@ -2,6 +2,13 @@
   ML Engine
 </h2>
 
+<div>
+  <button class="actionBtn" (click)="startSongAudio()">Play Song</button>
+</div>
+<div>
+  <button class="actionBtn" (click)="startAlertAudio()">Play Alert</button>
+</div>
+
 <h3 style="text-align:center">
   {{ functionality }}
 </h3>
@@ -23,7 +30,11 @@
 </div>
 
 <div>
-  Status : {{ status }}
+  <ul>
+    <li *ngFor="let s of status">
+      {{ s }}
+    </li>
+  </ul>
 </div>
 
 <div class="snapshot" *ngIf="webcamImage">

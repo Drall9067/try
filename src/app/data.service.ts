@@ -9,6 +9,14 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
+  sendEmotionFrame(image) {
+    return this.http.post('api/emotionImage', { 'image' : image }).pipe(
+      map((res) => {
+        return res
+      })
+    );
+  }
+
   sendFrontFrame(image) {
     return this.http.post('api/frontImage', { 'image' : image }).pipe(
       map((res) => {

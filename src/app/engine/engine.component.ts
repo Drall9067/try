@@ -11,14 +11,12 @@ import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 })
 export class EngineComponent implements OnInit {
 
-  
-
   images: Array<any> = [];
 
-  status: string;
+  status: Array<any> = [];
 
   showWebcam = true;
-  allowCameraSwitch = true;
+  allowCameraSwitch = false;
   multipleWebcamsAvailable = false;
   deviceId: string;
   videoOptions: MediaTrackConstraints = { };
@@ -31,6 +29,11 @@ export class EngineComponent implements OnInit {
   functionality: string;
   frontCamera: boolean;
 
+  songAudioURL: string;
+  songAudio: any;
+  alertAudioURL: string;
+  alertAudio: any;
+
   constructor(private data_service: DataService, private http: HttpClient) { }
 
   ngOnInit() {
@@ -38,10 +41,16 @@ export class EngineComponent implements OnInit {
     .then((mediaDevices: MediaDeviceInfo[]) => {
       this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
     });
-    this.status = "";
     this.mlEngine = false;
     this.functionality = "Detecting Drowsiness and Expressions";
     this.frontCamera = true;
+    this.alertAudioURL = 'https://vocaroo.com/media_command.php?media=s12Jk2MplTcB&command=download_mp3'
+    this.alertAudio = new Audio(this.alertAudioURL);
+  }
+
+  ngOnDestroy() {
+    this.songAudio.pause();
+    this.alertAudio.pause();
   }
 
   triggerSnapshot() {
@@ -56,7 +65,10 @@ export class EngineComponent implements OnInit {
     // string => move to device with given deviceId
     this.frontCamera = !this.frontCamera;
     if(this.frontCamera) {
-      this.functionality = "Detecting Drowsiness and Expressions"
+      this.functionality = "Detecting Drowsiness and Expressions";
+      if (this.songAudio) {
+        this.songAudio.pause();
+      }
     }
     else {
       this.functionality = "Detecting Vehicles and Persons"
@@ -80,6 +92,20 @@ export class EngineComponent implements OnInit {
     return this.nextWebcam.asObservable();
   }
 
+  emotionDetection() {
+    return new Promise((resolve, reject) => {
+      console.log("Sending Emotion Image...");
+      this.triggerSnapshot();
+
+      this.data_service.sendEmotionFrame(this.webcamImage['imageAsBase64'])
+        .subscribe((res) => {
+          this.status.push(res['message']);
+          console.log("Emotion Image Sent");
+          resolve('Done');
+        });
+    });
+  }
+
   sendImage() {
     return new Promise((resolve, reject) => {
       console.log("Sending Image...");
@@ -96,26 +122,60 @@ export class EngineComponent implements OnInit {
       else {
         this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status = res['message'];
+          this.status.push(res['message']);
           console.log("Rear Image Sent");
           resolve('Done');
         });
       }
-      
     });
   }
 
-  startPipeline() {
-    this.mlEngine = true;
-    this.timer = setInterval(async ()=>{
-      await this.sendImage();
-    },100);
+  async emotionDetectionPipeline() {
+    await this.emotionDetection();
+  }
+
+  async startPipeline() {
+    this.stopPipeline();
+
+    if (this.frontCamera) {
+      await this.emotionDetectionPipeline();
+    }
+    else {
+      this.mlEngine = true;
+      this.timer = setInterval(async ()=>{
+        await this.sendImage();
+      },500);
+    }
   }
 
   stopPipeline() {
     this.mlEngine = false;
     clearInterval(this.timer);
-    this.status = "";
+    this.status = [];
+  }
+
+  startSongAudio() {
+    if(this.songAudio) {
+      this.songAudio.pause();
+    }
+    this.songAudioURL = 'http://ganasong.in/siteuploads/files/sfd1/297/Coka%20(%20Sukh-e)%20Mp3%20Song%20320kbps-(GanaSong).mp3';
+    this.songAudio = new Audio(this.songAudioURL);
+    this.songAudio.onended = () => {
+      if (this.frontCamera) {
+        console.log("Done");
+        //detect expression
+        //select song
+        //startPipeline
+      }
+    }
+    this.songAudio.play();
+  }
+
+  startAlertAudio() {
+    this.alertAudio.play();
+    this.alertAudio.onended = () =>{
+      console.log("Ended");
+    }
   }
 
 }
