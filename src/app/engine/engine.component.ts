@@ -144,7 +144,7 @@ export class EngineComponent implements OnInit {
       this.mlEngine = true;
       this.timer = setInterval(async ()=>{
         await this.sendImage();
-      },500);
+      },2000);
     }
   }
 
