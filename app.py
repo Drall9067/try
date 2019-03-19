@@ -1,12 +1,17 @@
+import os
+import sys
+import cv2
+import json
+import base64
+import numpy as np
+from io import BytesIO
+import matplotlib.pyplot as plt
+from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
-import os
-import base64
-from io import BytesIO
-import numpy as np
-import cv2
-import json
+sys.path.append('./ML')
+import ML.engine as engine
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
@@ -21,12 +26,11 @@ def static_proxy(path):
     # send_static_file will guess the correct MIME type
     return app.send_static_file(path)
 
-class frontAPI(Resource):
+class emotionAPI(Resource):
      def get(self):
           pass
 
      def post(self):
-          print("Starting...")
           data = request.data
           data = data.decode("utf-8")
           data = json.loads(data)
@@ -35,19 +39,37 @@ class frontAPI(Resource):
           img_bytes = base64.b64decode(data_url)
           img_stream = BytesIO(img_bytes)
           img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+          img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+          
+          data = engine.detectExpression(img)
+          print("Data",data,sep=" : ")
+          return { 'message' : data }
 
-          print(img.shape)
-          print(img)
-          msg = 'Success. Front Image => '
-          msg += '('+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])+') '
-          return { 'message' : msg }
+class frontAPI(Resource):
+     def get(self):
+          pass
+
+     def post(self):
+          pass
+          # data = request.data
+          # data = data.decode("utf-8")
+          # data = json.loads(data)
+
+          # data_url = data['image']
+          # img_bytes = base64.b64decode(data_url)
+          # img_stream = BytesIO(img_bytes)
+          # img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+          # img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+          
+          # data = engine.detectVehicle(img)
+          # print("Data",data,sep=" : ")
+          # return { 'message' : data }
 
 class rearAPI(Resource):
      def get(self):
           pass
 
      def post(self):
-          print("Starting...")
           data = request.data
           data = data.decode("utf-8")
           data = json.loads(data)
@@ -56,13 +78,13 @@ class rearAPI(Resource):
           img_bytes = base64.b64decode(data_url)
           img_stream = BytesIO(img_bytes)
           img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
+          img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
-          print(img.shape)
-          print(img)
-          msg = 'Success. Rear Image => '
-          msg += '('+str(img.shape[0])+','+str(img.shape[1])+','+str(img.shape[2])+') '
-          return { 'message' : msg }
+          data = engine.detectVehicle(img)
+          print("Data",data,sep=" : ")
+          return { 'message' : data }
 
+api.add_resource(emotionAPI, '/api/emotionImage')
 api.add_resource(frontAPI, '/api/frontImage')
 api.add_resource(rearAPI, '/api/rearImage')
 
