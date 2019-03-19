@@ -6,7 +6,7 @@ import Expression.expression as expression
 sys.path.append('./Vehicle')
 import Vehicle.vehicle as vehicle
 
-def detectVehicle(img):
+def detectVehicles(img):
     return vehicle.getVehicles(img)
 
 def detectExpression(img):

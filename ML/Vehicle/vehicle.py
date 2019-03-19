@@ -214,8 +214,8 @@ vehicleDictionary = {
     "truck" : 3.2
 }
 net_h, net_w = 416, 416
-obj_thresh, nms_thresh = 0.7, 0.5
-anchors = [[116,90,  156,198,  373,326],  [30,61, 62,45,  59,119], [10,13,  16,30,  33,23]]
+obj_thresh, nms_thresh = 0.6, 0.45
+anchors = [[81,82,  135,169,  344,319], [23,27,  37,58,  81,82]]
 labels = ["person", "bicycle", "car", "motorbike", "bus", "truck"]
 vehicleModel = load_model('./ML/Vehicle/model.h5')
 vehicleModel._make_predict_function()
