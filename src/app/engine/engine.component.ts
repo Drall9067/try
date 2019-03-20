@@ -143,9 +143,9 @@ export class EngineComponent implements OnInit {
     }
     else {
       this.mlEngine = true;
-      this.allowSend = false;
       this.timer = setInterval(async ()=>{
         if (this.allowSend) {
+          this.allowSend = false;
           await this.sendImage()
           .then(()=>{
             this.allowSend = true
