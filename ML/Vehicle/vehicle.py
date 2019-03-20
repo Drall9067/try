@@ -85,7 +85,6 @@ def decode_netout(netout, anchors, obj_thresh, nms_thresh, net_h, net_w):
     grid_h, grid_w = netout.shape[:2]
     nb_box = 3
     netout = netout.reshape((grid_h, grid_w, nb_box, -1))
-    nb_class = netout.shape[-1] - 5
 
     boxes = []
 
@@ -160,13 +159,7 @@ def do_nms(boxes, nms_thresh):
                 if bbox_iou(boxes[index_i], boxes[index_j]) >= nms_thresh:
                     boxes[index_j].classes[c] = 0
 
-def find_distance(pf, dic, label, img_h, img_w, x, y, w, h):
-    known_height = dic[label]
-    
-    dist = (known_height * pf) / h
-    return round(dist,2)
-
-def draw_boxes(image, boxes, labels, obj_thresh, dic, pf):
+def draw_boxes(image, boxes):
     danger = []
     for box in boxes:
         label_str = ''
@@ -178,15 +171,14 @@ def draw_boxes(image, boxes, labels, obj_thresh, dic, pf):
                 label = i
                 
         if label >= 0:
-            dist = find_distance(pf, dic, label_str, image.shape[0], image.shape[1], box.xmin, box.ymin, box.xmax-box.xmin, box.ymax-box.ymin)
-            danger.append({ label_str : dist })
-            # if dist<=5.0:
-            #     danger.append({ label_str : dist })
+            dist = round((vehicleDictionary[label_str]*percieved_focal_length)/(box.ymax-box.ymin),2)
+            if dist<=5.0:
+                danger.append({ label_str : dist })
         
     return danger
 
 def getVehicles(img):
-    image = cv2.resize(img,(832,416))
+    image = cv2.resize(img,(640,480))
 
     image_h, image_w, _ = image.shape
     new_image = preprocess_input(image, net_h, net_w)
@@ -200,9 +192,7 @@ def getVehicles(img):
 
     correct_yolo_boxes(boxes, image_h, image_w, net_h, net_w)
     do_nms(boxes, nms_thresh)     
-    data = draw_boxes(image, boxes, labels, obj_thresh, vehicleDictionary, percieved_focal_length)
-
-    return data
+    return draw_boxes(image, boxes)
 
 vehicleDictionary = {
     "person" : 1.7,

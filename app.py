@@ -16,6 +16,8 @@ app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
 CORS(app)
 
+data = ""
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -34,13 +36,13 @@ class emotionAPI(Resource):
           data = data.decode("utf-8")
           data = json.loads(data)
 
-          data_url = data['image']
-          img_bytes = base64.b64decode(data_url)
-          img_stream = BytesIO(img_bytes)
-          img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
-          img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+          data = data['image']
+          data = base64.b64decode(data)
+          data = BytesIO(data)
+          data = cv2.imdecode(np.fromstring(data.read(), np.uint8), 1)
+          data = cv2.cvtColor(data,cv2.COLOR_BGR2RGB)
           
-          data = engine.detectExpression(img)
+          data = engine.detectExpression(data)
           print("Data",data,sep=" : ")
           return { 'message' : data }
 
@@ -73,13 +75,13 @@ class rearAPI(Resource):
           data = data.decode("utf-8")
           data = json.loads(data)
 
-          data_url = data['image']
-          img_bytes = base64.b64decode(data_url)
-          img_stream = BytesIO(img_bytes)
-          img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
-          img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+          data = data['image']
+          data = base64.b64decode(data)
+          data = BytesIO(data)
+          data = cv2.imdecode(np.fromstring(data.read(), np.uint8), 1)
+          data = cv2.cvtColor(data,cv2.COLOR_BGR2RGB)
 
-          data = engine.detectVehicles(img)
+          data = engine.detectVehicles(data)
           print("Data",data,sep=" : ")
           return { 'message' : data }
 
