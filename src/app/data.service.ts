@@ -7,7 +7,33 @@ import { map } from 'rxjs/operators';
 })
 export class DataService {
 
+  currentUser: any;
+
   constructor(private http: HttpClient) { }
+
+  checkUser(data) {
+    return this.http.post('api/checkUser', { 'user' : data }).pipe(
+      map((res) => {
+        if(res['user']=='') {
+          return false
+        }
+        this.currentUser = data;
+        return true
+      })
+    );
+  }
+
+  addUser(data) {
+    return this.http.post('api/addUser', { 'user' : data }).pipe(
+      map((res) => {
+        if(res['user']=='') {
+          return false
+        }
+        this.currentUser = data;
+        return true
+      })
+    );
+  }
 
   sendEmotionFrame(image) {
     return this.http.post('api/emotionImage', { 'image' : image }).pipe(

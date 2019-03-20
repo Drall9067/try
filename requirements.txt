@@ -5,3 +5,4 @@ numpy
 opencv-python-headless
 keras
 tensorflow
+pymongo[tls,srv]

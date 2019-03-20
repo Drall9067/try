@@ -14,7 +14,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { RegisterComponent } from './register/register.component';
 
 import { WebcamModule } from 'ngx-webcam';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import 'webrtc-adapter';
 import { DashbarComponent } from './dashbar/dashbar.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -40,7 +40,8 @@ import { EngineComponent } from './engine/engine.component';
     HttpModule,
     HttpClientModule,
     WebcamModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

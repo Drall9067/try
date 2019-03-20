@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { DataService } from '../data.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +10,40 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  currentUrl: string;
+  rForm: FormGroup;
+  loginStatus: boolean;
 
-  constructor(private router: Router) {
-    router.events.subscribe((_: NavigationEnd) => {
-      this.currentUrl = router.url;
+  constructor(private route: ActivatedRoute, private router: Router, private fb: FormBuilder, private dataService: DataService) {
+    this.rForm = fb.group({
+      'email' : [
+        null,
+        Validators.compose([
+          Validators.required,
+          Validators.email
+        ])
+      ],
+      'password' : [
+        null,
+        Validators.compose([
+          Validators.required
+        ])
+      ]
     });
+    this.loginStatus = true
   }
 
   ngOnInit() {
+  }
+
+  submitForm(data) {
+    this.loginStatus = true;
+    console.log(data)
+    this.dataService.checkUser(data).subscribe((res) => {
+      if(res) {
+        this.router.navigate(['../dashboard'])
+      }
+      this.loginStatus = false
+    });
   }
 
 }

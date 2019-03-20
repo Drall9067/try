@@ -3,20 +3,28 @@ import sys
 import cv2
 import json
 import base64
+import pymongo
 import numpy as np
 from io import BytesIO
-from keras.models import load_model
+from bson import json_util, ObjectId
+from bson.json_util import dumps
+# from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
-sys.path.append('./ML')
-import ML.engine as engine
+# sys.path.append('./ML')
+# import ML.engine as engine
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
 CORS(app)
+client = pymongo.MongoClient("mongodb+srv://meanMachines:hacknsut@myappcluster-zyfjx.mongodb.net/userDatabase",connect=True)
+
+db = client['userDatabase']
+col = db['userCollection']
 
 data = ""
+temp = ""
 
 @app.route('/')
 def index():
@@ -26,6 +34,42 @@ def index():
 def static_proxy(path):
     # send_static_file will guess the correct MIME type
     return app.send_static_file(path)
+
+class checkUser(Resource):
+     def get(self):
+          pass
+     
+     def post(self):
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
+
+          data = data['user']
+          print(data)
+          data = json.loads(dumps(col.find(data).sort("time", -1)))
+          print(data)
+          if(len(data)>0):
+               return { "user" : data }
+          return { "user" : '' }
+
+class addUser(Resource):
+     def get(self):
+          pass
+     
+     def post(self):
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
+
+          data = data['user']
+          print(data)
+          temp = json.loads(dumps(col.find({ 'email' : str(data['email']) }).sort("time", -1)))
+          print(temp)
+          if(len(temp)>0):
+               return { "user" : "" }
+          col.insert_one(data)
+          data = json.loads(json_util.dumps(data))
+          return { "user" : data }
 
 class emotionAPI(Resource):
      def get(self):
@@ -89,12 +133,14 @@ class rearAPI(Resource):
           print()
           return { 'message' : data }
 
+api.add_resource(checkUser, '/api/checkUser')
+api.add_resource(addUser, '/api/addUser')
 api.add_resource(emotionAPI, '/api/emotionImage')
 api.add_resource(frontAPI, '/api/frontImage')
 api.add_resource(rearAPI, '/api/rearImage')
 
-app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
+# app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
 if __name__ == '__main__':
-     app.run(debug=False)
-	# app.run(port=5000,debug=False)
+     # app.run(debug=False)
+	app.run(port=5000,debug=False)

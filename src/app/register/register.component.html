@@ -2,6 +2,62 @@
   Register
 </h1>
 
-<div style="text-align:center">
-  Existing User : <a routerLink="../dashboard" [class.activated]='currentUrl == "/dashboard"'>Go to Dashboard</a>
+<div *ngIf="!registerStatus" style="text-align:center">
+  User already exits
+</div>
+
+<div class="container">
+  <form [formGroup]="rForm">
+    <div class="form-container">
+      <div class="row columns">
+        <label>First Name
+          <input formControlName="firstname" type="text">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['firstname'].valid && rForm.controls['firstname'].touched">
+          Field Error!
+        </div>
+
+        <label>Last Name
+          <input formControlName="lastname" type="text">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['lastname'].valid && rForm.controls['lastname'].touched">
+          Field Error!
+        </div>
+
+        <label>Gender
+          <select formControlName="gender">
+            <option *ngFor="let gen of genders" [value]="gen">
+              {{ gen }}
+            </option>
+          </select>
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['gender'].valid && rForm.controls['gender'].touched">
+          Gender not selected!
+        </div>
+
+        <label>Email
+          <input formControlName="email" type="text">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">
+          Incorrect Email format!
+        </div>
+
+        <label>Password
+          <input formControlName="password" type="password"
+          pattern="^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}$">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
+          Password must have :
+          <ul>
+            <li>Atleat 8 characters</li>
+            <li>An alphabet</li>
+            <li>A number</li>
+            <li>A special character [$@$!%*?&]</li>
+          </ul>
+        </div>
+
+        <a class="button expanded" (click)="submitForm(rForm.value)">Register</a>
+      </div>
+    </div>
+  </form>
 </div>

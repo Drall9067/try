@@ -2,9 +2,30 @@
   Login
 </h1>
 
-<div style="text-align:center">
-  New User : <a routerLink="../register" [class.activated]='currentUrl == "/register"'>Register</a>
+<div *ngIf="!loginStatus" style="text-align:center">
+  Incorrect Email ID or Password
 </div>
-<div style="text-align:center">
-  Existing User : <a routerLink="../dashboard" [class.activated]='currentUrl == "/dashboard"'>Go to Dashboard</a>
+
+<div class="container">
+  <form [formGroup]="rForm">
+    <div class="form-container">
+      <div class="row columns">
+        <label>Email
+          <input formControlName="email" type="text">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">
+          Incorrect Email format!
+        </div>
+
+        <label>Password
+          <input formControlName="password" type="password">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
+          Password required
+        </div>
+
+        <a class="button expanded" (click)="submitForm(rForm.value)">Login</a>
+      </div>
+    </div>
+  </form>
 </div>
