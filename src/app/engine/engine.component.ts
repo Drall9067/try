@@ -28,6 +28,7 @@ export class EngineComponent implements OnInit {
   timer: any;
   functionality: string;
   frontCamera: boolean;
+  allowSend: boolean;
 
   songAudioURL: string;
   songAudio: any;
@@ -122,7 +123,7 @@ export class EngineComponent implements OnInit {
       else {
         this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status.push(res['message']);
+          this.status = res['message'];
           console.log("Rear Image Sent");
           resolve('Done');
         });
@@ -142,14 +143,22 @@ export class EngineComponent implements OnInit {
     }
     else {
       this.mlEngine = true;
+      this.allowSend = false;
       this.timer = setInterval(async ()=>{
-        await this.sendImage();
+        if (this.allowSend) {
+          await this.sendImage()
+          .then(()=>{
+            this.allowSend = true
+          });
+        }
+        // await this.sendImage();
       },5000);
     }
   }
 
   stopPipeline() {
     this.mlEngine = false;
+    this.allowSend = true;
     clearInterval(this.timer);
     this.status = [];
   }
