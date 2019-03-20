@@ -13,7 +13,7 @@ export class EngineComponent implements OnInit {
 
   images: Array<any> = [];
 
-  status: Array<any> = [];
+  status: string = "";
 
   showWebcam = true;
   allowCameraSwitch = false;
@@ -100,7 +100,7 @@ export class EngineComponent implements OnInit {
 
       this.data_service.sendEmotionFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status.push(res['message']);
+          this.status = res['message'];
           console.log("Emotion Image Sent");
           resolve('Done');
         });
@@ -115,7 +115,13 @@ export class EngineComponent implements OnInit {
       if(this.frontCamera) {
         this.data_service.sendFrontFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status = res['message'];
+          if(res) {
+            this.status = "DANGER!"
+            this.startAlertAudio()
+          }
+          else {
+            this.status = "No Danger"
+          }
           console.log("Front Image Sent");
           resolve('Done');
         });
@@ -123,7 +129,13 @@ export class EngineComponent implements OnInit {
       else {
         this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status = res['message'];
+          if(res) {
+            this.status = "DANGER!"
+            this.startAlertAudio()
+          }
+          else {
+            this.status = "No Danger"
+          }
           console.log("Rear Image Sent");
           resolve('Done');
         });
@@ -160,7 +172,7 @@ export class EngineComponent implements OnInit {
     this.mlEngine = false;
     this.allowSend = true;
     clearInterval(this.timer);
-    this.status = [];
+    this.status = "";
   }
 
   startSongAudio() {

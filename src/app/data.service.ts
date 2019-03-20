@@ -28,7 +28,10 @@ export class DataService {
   sendRearFrame(image) {
     return this.http.post('api/rearImage', { 'image' : image }).pipe(
       map((res) => {
-        return res
+        if (res['message']=='1') {
+          return true
+        }
+        return false
       })
     );
   }

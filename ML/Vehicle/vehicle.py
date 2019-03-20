@@ -160,7 +160,6 @@ def do_nms(boxes, nms_thresh):
                     boxes[index_j].classes[c] = 0
 
 def draw_boxes(image, boxes):
-    danger = []
     for box in boxes:
         label_str = ''
         label = -1
@@ -173,9 +172,9 @@ def draw_boxes(image, boxes):
         if label >= 0:
             dist = round((vehicleDictionary[label_str]*percieved_focal_length)/(box.ymax-box.ymin),2)
             if dist<=5.0:
-                danger.append({ label_str : dist })
+                return '1'
         
-    return danger
+    return '0'
 
 def getVehicles(img):
     image = cv2.resize(img,(640,480))
