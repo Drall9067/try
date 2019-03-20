@@ -43,7 +43,9 @@ class emotionAPI(Resource):
           data = cv2.cvtColor(data,cv2.COLOR_BGR2RGB)
           
           data = engine.detectExpression(data)
+          print()
           print("Data",data,sep=" : ")
+          print()
           return { 'message' : data }
 
 class frontAPI(Resource):
@@ -82,7 +84,9 @@ class rearAPI(Resource):
           data = cv2.cvtColor(data,cv2.COLOR_BGR2RGB)
 
           data = engine.detectVehicles(data)
+          print()
           print("Data",data,sep=" : ")
+          print()
           return { 'message' : data }
 
 api.add_resource(emotionAPI, '/api/emotionImage')
