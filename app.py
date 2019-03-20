@@ -8,12 +8,12 @@ import numpy as np
 from io import BytesIO
 from bson import json_util, ObjectId
 from bson.json_util import dumps
-# from keras.models import load_model
+from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
-# sys.path.append('./ML')
-# import ML.engine as engine
+sys.path.append('./ML')
+import ML.engine as engine
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
