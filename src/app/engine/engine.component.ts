@@ -50,8 +50,12 @@ export class EngineComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.songAudio.pause();
-    this.alertAudio.pause();
+    if(this.songAudio) {
+      this.songAudio.pause();
+    }
+    if(this.alertAudio) {
+      this.alertAudio.pause();
+    }
   }
 
   triggerSnapshot() {
