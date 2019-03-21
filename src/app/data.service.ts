@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root'
@@ -8,17 +9,24 @@ import { map } from 'rxjs/operators';
 export class DataService {
 
   currentUser: any;
+  loginStatus = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) { }
+
+  logOut() {
+    this.loginStatus.next(false);
+  }
 
   checkUser(data) {
     return this.http.post('api/checkUser', { 'user' : data }).pipe(
       map((res) => {
         if(res['user']=='') {
-          return false
+          this.loginStatus.next(false);
+          return false;
         }
-        this.currentUser = data;
-        return true
+        this.loginStatus.next(true);
+        this.currentUser = res['user'];
+        return true;
       })
     );
   }
@@ -27,10 +35,12 @@ export class DataService {
     return this.http.post('api/addUser', { 'user' : data }).pipe(
       map((res) => {
         if(res['user']=='') {
-          return false
+          this.loginStatus.next(false);
+          return false;
         }
-        this.currentUser = data;
-        return true
+        this.loginStatus.next(true);
+        this.currentUser = res['user'];
+        return true;
       })
     );
   }

@@ -8,12 +8,12 @@ import numpy as np
 from io import BytesIO
 from bson import json_util, ObjectId
 from bson.json_util import dumps
-from keras.models import load_model
+# from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
-sys.path.append('./ML')
-import ML.engine as engine
+# sys.path.append('./ML')
+# import ML.engine as engine
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
@@ -47,9 +47,8 @@ class checkUser(Resource):
           data = data['user']
           print(data)
           data = json.loads(dumps(col.find(data).sort("time", -1)))
-          print(data)
           if(len(data)>0):
-               return { "user" : data }
+               return jsonify({ "user" : data[0] })
           return { "user" : '' }
 
 class addUser(Resource):
@@ -62,14 +61,12 @@ class addUser(Resource):
           data = json.loads(data)
 
           data = data['user']
-          print(data)
           temp = json.loads(dumps(col.find({ 'email' : str(data['email']) }).sort("time", -1)))
-          print(temp)
           if(len(temp)>0):
                return { "user" : "" }
           col.insert_one(data)
           data = json.loads(json_util.dumps(data))
-          return { "user" : data }
+          return jsonify({ "user" : data })
 
 class emotionAPI(Resource):
      def get(self):

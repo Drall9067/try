@@ -2,12 +2,21 @@
   Navbar
 </h1>
 
+<ul>
+  <li>
+    <a routerLink="" [class.activated]='currentUrl == "/"'>Home</a>
+  </li>
+  <li *ngIf="!loggedIn">
+    <a routerLink="login" [class.activated]='currentUrl == "/login"'>Login</a>
+  </li>
+  <li *ngIf="!loggedIn">
+    <a routerLink="register" [class.activated]='currentUrl == "/register"'>Register</a>
+  </li>
+  <li *ngIf="loggedIn">
+    <a routerLink="dashboard" [class.activated]='currentUrl == "/dashboard"'>Dashboard</a>
+  </li>
+  <li *ngIf="loggedIn">
+    <a routerLink="" [class.activated]='currentUrl == "/"' (click)="logOut()">Logout</a>
+  </li>
+</ul>
 <div>
-  <a routerLink="" [class.activated]='currentUrl == "/"'>Home</a>
-</div>
-<div>
-  <a routerLink="login" [class.activated]='currentUrl == "/login"'>Login</a>
-</div>
-<div>
-  <a routerLink="register" [class.activated]='currentUrl == "/register"'>Register</a>
-</div>
