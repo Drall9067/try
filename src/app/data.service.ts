@@ -14,6 +14,7 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   logOut() {
+    this.currentUser = {};
     this.loginStatus.next(false);
   }
 
