@@ -1,30 +1,25 @@
-<h1 style="text-align:center">
-  Login
-</h1>
-
-<div *ngIf="!loginStatus" style="text-align:center">
-  Incorrect Email ID or Password
-</div>
-
 <div class="container">
-  <form [formGroup]="rForm">
-    <div class="form-container">
-      <div class="row columns">
-        <label>Email
-          <input formControlName="email" type="text">
-        </label>
-        <div class="alert" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">
-          Incorrect Email format!
-        </div>
-
-        <label>Password
-          <input formControlName="password" type="password">
-        </label>
-        <div class="alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
-          Password required
-        </div>
-
-        <a class="button expanded" (click)="submitForm(rForm.value)">Login</a>
+  <form [formGroup]="rForm" class="form-container">
+    <div class="form-group">
+      <label for="inputEmail1">Email ID</label>
+      <input type="email" formControlName="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Enter email...">
+      <small id="emailHelp" class="form-text text-muted alert" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">
+        The format's incorrect!
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword1">Password</label>
+      <input type="password" formControlName="password" class="form-control" id="inputPassword1" aria-describedby="passwordHelp" placeholder="Enter password...">
+      <small id="passwordHelp" class="form-text text-muted alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
+        Don't leave it blank!
+      </small>
+    </div>
+    <div class="container text-center" style="color : red" *ngIf="!loginStatus" style="text-align:center">
+        You sure of the email id and password!
+    </div>
+    <div class="container text-center">
+      <div class="btn">
+          <a class="button" (click)="submitForm(rForm.value)">Let's Go!</a>
       </div>
     </div>
   </form>

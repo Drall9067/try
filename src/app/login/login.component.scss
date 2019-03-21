@@ -1,34 +1,36 @@
 .form-container {
-    display:block;
-    width:70%;
-    padding:2em;
-    margin: 2em auto;
-    background:#fff;
+    width:80%;
+    padding:1.5em;
+    margin: 5em auto;
+}
+
+.form-group{
+    color: #fff;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .alert {
-    background: darksalmon;
-    padding: 4px;
-    font-size: .9em;
-    margin-bottom: 20px;
-    display: inline-block;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.8rem;
     animation: 0.75s alertAnim forwards;
 }
 
-.button {
-    border-radius: 2rem;
+.btn {
     margin: auto;
-    width: 30%;
-    margin-top: 3rem;
-    font-size: 1.5rem;
-}
-h1 {
-    margin-bottom: 2rem;
-    font-weight:bold;
-    font-family:'Muli';
-    font-size: 2em;
+    border-radius: 0.8rem;
 }
 
+.button {
+    color: #00a8ff !important;
+    font-weight: bold;
+    padding: 10px;
+    margin: auto;
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
 
 @keyframes alertAnim {
     from {

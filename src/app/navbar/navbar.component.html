@@ -1,22 +1,24 @@
-<h1 style="text-align:center">
-  Navbar
-</h1>
-
-<ul>
-  <li>
-    <a routerLink="" [class.activated]='currentUrl == "/"'>Home</a>
-  </li>
-  <li *ngIf="!loggedIn">
-    <a routerLink="login" [class.activated]='currentUrl == "/login"'>Login</a>
-  </li>
-  <li *ngIf="!loggedIn">
-    <a routerLink="register" [class.activated]='currentUrl == "/register"'>Register</a>
-  </li>
-  <li *ngIf="loggedIn">
-    <a routerLink="dashboard" [class.activated]='currentUrl == "/dashboard"'>Dashboard</a>
-  </li>
-  <li *ngIf="loggedIn">
-    <a routerLink="" [class.activated]='currentUrl == "/"' (click)="logOut()">Logout</a>
-  </li>
-</ul>
-<div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-8">
+      LOGO
+    </div>
+    <div class="col-4 row align-items-center">
+        <div class="col" *ngIf="!loggedIn">
+          <a routerLink="" [class.activated]='currentUrl == "/"'>Home</a>
+        </div>
+        <div class="col" *ngIf="!loggedIn">
+          <a routerLink="login" [class.activated]='currentUrl == "/login"'>Login</a>
+        </div>
+        <div class="col" *ngIf="!loggedIn">
+          <a routerLink="register" [class.activated]='currentUrl == "/register"'>Register</a>
+        </div>
+        <div class="col" *ngIf="loggedIn">
+          <a routerLink="dashboard" [class.activated]='currentUrl == "/dashboard"'>Dashboard</a>
+        </div>
+        <div class="col" *ngIf="loggedIn">
+          <a routerLink="" [class.activated]='currentUrl == "/"' (click)="logOut()">Logout</a>
+        </div>
+    </div>
+  </div>
+</div>

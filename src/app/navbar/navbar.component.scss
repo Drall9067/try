@@ -1,0 +1,20 @@
+.col {
+    padding: 10px;
+    text-align: center;
+    height: 100%;
+
+    a {
+        margin: auto;
+        font-size: 1.3rem;
+        color: #fff;
+        display: block;
+    }
+}
+
+.col {
+    .activated {
+        color:#00a8ff;
+        text-decoration: overline;
+        font-weight: bold;
+    }
+}
