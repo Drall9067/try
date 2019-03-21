@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid thenav">
   <div class="row">
     <div class="col-8">
       LOGO
@@ -21,4 +21,29 @@
         </div>
     </div>
   </div>
-</div>
+</div> -->
+
+<nav class="navbar fixed-top navbar-expand-md sticky-top navbar-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarToggler">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item" *ngIf="!loggedIn">
+        <a routerLink="" [class.activated]='currentUrl == "/"'>Home</a>
+      </li>
+      <li class="nav-item" *ngIf="!loggedIn">
+        <a routerLink="login" [class.activated]='currentUrl == "/login"'>Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!loggedIn">
+        <a routerLink="register" [class.activated]='currentUrl == "/register"'>Register</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn">
+        <a routerLink="dashboard" [class.activated]='currentUrl == "/dashboard"'>Dashboard</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn">
+        <a routerLink="" [class.activated]='currentUrl == "/"'>Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>

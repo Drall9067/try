@@ -1,17 +1,29 @@
-.col {
+nav {
+    background-color: black;
+}
+
+ul {
+    margin: auto;
+}
+
+.navbar-toggler {
+    background-color: #fff;
+}
+
+.nav-item {
     padding: 10px;
     text-align: center;
     height: 100%;
 
     a {
         margin: auto;
-        font-size: 1.3rem;
+        font-size: 1.6rem;
         color: #fff;
         display: block;
     }
 }
 
-.col {
+.nav-item {
     .activated {
         color:#00a8ff;
         text-decoration: overline;
