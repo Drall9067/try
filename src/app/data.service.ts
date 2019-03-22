@@ -54,8 +54,8 @@ export class DataService {
     );
   }
 
-  sendFrontFrame(image) {
-    return this.http.post('api/frontImage', { 'image' : image }).pipe(
+  sendFrontFrame(images) {
+    return this.http.post('api/frontImage', { 'images' : images }).pipe(
       map((res) => {
         return res
       })

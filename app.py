@@ -8,12 +8,12 @@ import numpy as np
 from io import BytesIO
 from bson import json_util, ObjectId
 from bson.json_util import dumps
-# from keras.models import load_model
+from keras.models import load_model
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_restful import Resource, Api
-# sys.path.append('./ML')
-# import ML.engine as engine
+sys.path.append('./ML')
+import ML.engine as engine
 
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
@@ -94,20 +94,21 @@ class frontAPI(Resource):
           pass
 
      def post(self):
-          pass
-          # data = request.data
-          # data = data.decode("utf-8")
-          # data = json.loads(data)
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
 
-          # data_url = data['image']
-          # img_bytes = base64.b64decode(data_url)
-          # img_stream = BytesIO(img_bytes)
-          # img = cv2.imdecode(np.fromstring(img_stream.read(), np.uint8), 1)
-          # img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+          data = data['images']
+          for i in range(len(data)):
+               img = base64.b64decode(data[i])
+               img = BytesIO(img)
+               img = cv2.imdecode(np.fromstring(img.read(), np.uint8), 1)
+               img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+               data[i] = img
           
-          # data = engine.detectVehicle(img)
-          # print("Data",data,sep=" : ")
-          # return { 'message' : data }
+          data = np.array(data)
+          print(data.shape)
+          return { 'message' : '0' }
 
 class rearAPI(Resource):
      def get(self):
@@ -136,8 +137,8 @@ api.add_resource(emotionAPI, '/api/emotionImage')
 api.add_resource(frontAPI, '/api/frontImage')
 api.add_resource(rearAPI, '/api/rearImage')
 
-# app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
+app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
 if __name__ == '__main__':
-     # app.run(debug=False)
-	app.run(port=5000,debug=False)
+     app.run(debug=False)
+	# app.run(port=5000,debug=False)

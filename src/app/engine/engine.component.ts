@@ -12,6 +12,7 @@ import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 export class EngineComponent implements OnInit {
 
   images: Array<any> = [];
+  imagesData : Array<any> = [];
 
   status: string = "";
 
@@ -83,7 +84,6 @@ export class EngineComponent implements OnInit {
   handleImage(webcamImage: WebcamImage) {
     // console.info('received webcam image', webcamImage);
     // console.info('received webcam image', webcamImage['imageAsBase64']);
-    this.images.push(webcamImage['imageAsDataUrl']);
     this.webcamImage = webcamImage;
   }
   cameraWasSwitched(deviceId: string) {
@@ -111,64 +111,125 @@ export class EngineComponent implements OnInit {
     });
   }
 
-  sendImage() {
+  async emotionDetectionPipeline() {
+    await this.emotionDetection();
+  }
+
+  shutter() {
+    return new Promise((resolve,reject) => {
+      this.triggerSnapshot();
+      resolve('Done');  
+    });
+  }
+
+  captureBacthHandler() {
+    return new Promise((resolve,reject) => {
+      var i;
+      for(i=0; i<20; i++) {
+        this.shutter()
+        .then(() => {
+          console.log(i);
+          this.images.push(this.webcamImage['imageAsDataUrl']);
+          this.imagesData.push(this.webcamImage['imageAsBase64']);
+        });
+      }
+      resolve('Done');
+    });
+  }
+
+  captureBatch() {
+    return new Promise((resolve,reject) => {
+      this.shutter()
+      .then(()=>{
+        this.imagesData.push(this.webcamImage['imageAsBase64']);
+        this.images.push(this.webcamImage['imageAsDataUrl']);
+      })
+      .then(()=>{
+        resolve('Done');
+      });
+    });
+  }
+
+  sendFrontImage() {
+    return new Promise((resolve, reject) => {
+      console.log("Capturing Images...");
+      
+      this.captureBatch()
+      .then(()=>{
+        if(this.imagesData.length<20) {
+          resolve('Done')
+        }
+        else {
+          console.log("Sending Images...");
+          console.log(this.imagesData.length);
+          this.data_service.sendFrontFrame(this.imagesData)
+          .subscribe((res) => {
+            if(res['message']=='1') {
+              this.status = "DANGER!";
+              this.startAlertAudio();
+            }
+            else {
+              this.status = "No Danger";
+            }
+            this.images = [];
+            this.imagesData = [];
+            console.log("Front Images Sent");
+            resolve('Done');
+          });
+        }
+      });
+    });
+  }
+
+  sendRearImage() {
     return new Promise((resolve, reject) => {
       console.log("Sending Image...");
       this.triggerSnapshot();
 
-      if(this.frontCamera) {
-        this.data_service.sendFrontFrame(this.webcamImage['imageAsBase64'])
-        .subscribe((res) => {
-          if(res) {
-            this.status = "DANGER!"
-            this.startAlertAudio()
-          }
-          else {
-            this.status = "No Danger"
-          }
-          console.log("Front Image Sent");
-          resolve('Done');
-        });
-      }
-      else {
-        this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
-        .subscribe((res) => {
-          if(res) {
-            this.status = "DANGER!"
-            this.startAlertAudio()
-          }
-          else {
-            this.status = "No Danger"
-          }
-          console.log("Rear Image Sent");
-          resolve('Done');
-        });
-      }
+      this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
+      .subscribe((res) => {
+        if(res) {
+          this.status = "DANGER!"
+          this.startAlertAudio()
+        }
+        else {
+          this.status = "No Danger"
+        }
+        console.log("Rear Image Sent");
+        resolve('Done');
+      });
     });
-  }
-
-  async emotionDetectionPipeline() {
-    await this.emotionDetection();
   }
 
   async startPipeline() {
     this.stopPipeline();
 
     if (this.frontCamera) {
+      this.images = []
+      this.imagesData = []
       await this.emotionDetectionPipeline();
+      this.mlEngine = true;
+      this.timer = setInterval(async ()=>{
+        if (this.allowSend) {
+          this.allowSend = false;
+          await this.sendFrontImage()
+          .then(()=>{
+            this.allowSend = true
+          });
+        }
+      },100);
     }
     else {
       this.mlEngine = true;
       this.timer = setInterval(async ()=>{
         if (this.allowSend) {
           this.allowSend = false;
-          await this.sendImage()
+          await this.sendRearImage()
           .then(()=>{
             this.allowSend = true
           });
         }
-        // await this.sendImage();
-      },5000);
+      },500);
     }
   }
 
