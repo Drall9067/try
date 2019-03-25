@@ -6,8 +6,6 @@ opencv-python-headless
 keras
 tensorflow
 pymongo[tls,srv]
-scipy
-sciKit-Image
 cmake
 imutils
 dlib

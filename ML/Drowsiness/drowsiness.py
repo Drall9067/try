@@ -3,14 +3,13 @@ import imutils
 import numpy as np 
 from pathlib import Path
 from imutils import face_utils
-from scipy.spatial import distance 
 
 earthreshold = 0.25
 
 def ear(eye):
-	hor = distance.euclidean(eye[0], eye[3])
-	ver1 = distance.euclidean(eye[1], eye[5])
-	ver2 = distance.euclidean(eye[2], eye[4])
+	hor = np.linalg.norm(eye[0]-eye[3])
+	ver1 = np.linalg.norm(eye[1]-eye[5])
+	ver2 = np.linalg.norm(eye[2]-eye[4])
 
 	return (ver1 + ver2)/(2*hor)
 
