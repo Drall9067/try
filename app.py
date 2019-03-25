@@ -23,9 +23,6 @@ client = pymongo.MongoClient("mongodb+srv://meanMachines:hacknsut@myappcluster-z
 db = client['userDatabase']
 col = db['userCollection']
 
-data = ""
-temp = ""
-
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -103,12 +100,13 @@ class frontAPI(Resource):
                img = base64.b64decode(data[i])
                img = BytesIO(img)
                img = cv2.imdecode(np.fromstring(img.read(), np.uint8), 1)
-               img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+               img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
                data[i] = img
           
           data = np.array(data)
           print(data.shape)
-          return { 'message' : '0' }
+          data = engine.detectDrowsiness(data)
+          return { 'message' : data }
 
 class rearAPI(Resource):
      def get(self):
@@ -137,8 +135,8 @@ api.add_resource(emotionAPI, '/api/emotionImage')
 api.add_resource(frontAPI, '/api/frontImage')
 api.add_resource(rearAPI, '/api/rearImage')
 
-app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
+# app.run(host=os.getenv('IP', '0.0.0.0'), port = int(os.getenv('PORT', 8080)))
 
 if __name__ == '__main__':
-     app.run(debug=False)
-	# app.run(port=5000,debug=False)
+     # app.run(debug=False)
+	app.run(port=5000,debug=False)
