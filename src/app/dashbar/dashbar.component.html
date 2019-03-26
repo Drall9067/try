@@ -1,13 +1,13 @@
-<h2>
-  Dashbar
-</h2>
-
-<nav>
-  <a routerLink="/dashboard" [class.activated]='currentUrl == "/dashboard"'>Profile</a>
-</nav>
-<nav>
-  <a routerLink="engine" [class.activated]='currentUrl == "/engine"'>Engine</a>
-</nav>
-<nav>
-  <a routerLink="history" [class.activated]='currentUrl == "/history"'>History</a>
+<nav class="navbar fixed-top sticky-top navbar-light">
+  <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+    <li class="nav-item">
+      <a routerLink="/dashboard" [class.activated]='currentUrl == "/dashboard"'>Profile</a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="engine" [class.activated]='currentUrl == "/dashboard/engine"'>Engine</a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="history" [class.activated]='currentUrl == "/dashboard/history"'>History</a>
+    </li>
+  </ul>
 </nav>

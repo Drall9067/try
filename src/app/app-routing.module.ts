@@ -13,15 +13,24 @@ import 'webrtc-adapter';
 const routes: Routes = [
   {
     path : '',
-    component : HomeComponent
+    component : HomeComponent,
+    data : {
+      animation : 'HomePage'
+    }
   },
   {
     path : 'login',
-    component : LoginComponent
+    component : LoginComponent,
+    data : {
+      animation : 'LoginPage'
+    }
   },
   {
     path : 'register',
-    component : RegisterComponent
+    component : RegisterComponent,
+    data : {
+      animation : 'RegisterPage'
+    }
   },
   {
     path : 'dashboard',
@@ -29,15 +38,24 @@ const routes: Routes = [
     children : [
       {
         path : '',
-        component : ProfileComponent
+        component : ProfileComponent,
+        data : {
+          animation : 'ProfilePage'
+        }
       },
       {
         path : 'engine',
-        component : EngineComponent
+        component : EngineComponent,
+        data : {
+          animation : 'EnginePage'
+        }
       },
       {
         path : 'history',
-        component : HistoryComponent
+        component : HistoryComponent,
+        data : {
+          animation : 'HistoryPage'
+        }
       }
     ]
   }

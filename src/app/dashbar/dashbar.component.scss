@@ -1,0 +1,32 @@
+nav {
+    background-color: black;
+}
+
+ul {
+    margin: auto;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
+.nav-item {
+    padding: 10px;
+    text-align: center;
+    height: 100%;
+
+    a {
+        margin: auto;
+        font-size: 1.4rem;
+        color: #fff;
+        display: block;
+    }
+}
+
+.nav-item {
+    .activated {
+        color:#00a8ff;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+}

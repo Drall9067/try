@@ -1,7 +1,5 @@
-<h1 style="text-align:center">
-  Dashboard
-</h1>
-
 <app-dashbar></app-dashbar>
 
-<router-outlet></router-outlet>
+<div [@routeAnimations]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>

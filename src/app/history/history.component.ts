@@ -25,63 +25,65 @@ export class HistoryComponent implements OnInit {
   ngOnInit() {
     this.userData = this.dataServie.currentUser;
 
-    var label = [];
-    var i;
-    for(i=1; i<=this.userData['history']['vehicle'].length; i++){
-      label.push(String(i))
-    }
-    console.log(label)
-  
-    this.chartVehicle = new Chart('canvasVehicle', {
-      type : 'line',
-      data : {
-        labels : label,
-        datasets : [
-          {
-            label : '# of encounters',
-            data : this.userData['history']['vehicle'],
-            borderColor : 'red',
-            fill : true,
-            backgroundColor : 'rgba(255,0,0,0.1)'
-          }
-        ]
-      },
-      options : {
-        responsive : true,
-        legend : {
-          display : false
-        }
+    if(this.userData) {
+      var label = [];
+      var i;
+      for(i=1; i<=this.userData['history']['vehicle'].length; i++){
+        label.push(String(i))
       }
-    });
+      console.log(label)
+    
+      this.chartVehicle = new Chart('canvasVehicle', {
+        type : 'line',
+        data : {
+          labels : label,
+          datasets : [
+            {
+              label : '# of encounters',
+              data : this.userData['history']['vehicle'],
+              borderColor : 'red',
+              fill : true,
+              backgroundColor : 'rgba(255,0,0,0.1)'
+            }
+          ]
+        },
+        options : {
+          responsive : true,
+          legend : {
+            display : false
+          }
+        }
+      });
 
-    var label = [];
-    var i;
-    for(i=1; i<=this.userData['history']['drowsiness'].length; i++){
-      label.push(String(i))
-    }
-    console.log(label)
-  
-    this.chartDrowsiness = new Chart('canvasDrowsiness', {
-      type : 'line',
-      data : {
-        labels : label,
-        datasets : [
-          {
-            label : '# of drowsiness',
-            data : this.userData['history']['drowsiness'],
-            borderColor : 'blue',
-            fill : true,
-            backgroundColor : 'rgba(0,0,255,0.1)'
-          }
-        ]
-      },
-      options : {
-        responsive : true,
-        legend : {
-          display : false
-        }
+      var label = [];
+      var i;
+      for(i=1; i<=this.userData['history']['drowsiness'].length; i++){
+        label.push(String(i))
       }
-    });
+      console.log(label)
+    
+      this.chartDrowsiness = new Chart('canvasDrowsiness', {
+        type : 'line',
+        data : {
+          labels : label,
+          datasets : [
+            {
+              label : '# of drowsiness',
+              data : this.userData['history']['drowsiness'],
+              borderColor : 'blue',
+              fill : true,
+              backgroundColor : 'rgba(0,0,255,0.1)'
+            }
+          ]
+        },
+        options : {
+          responsive : true,
+          legend : {
+            display : false
+          }
+        }
+      });
+    }
   }
 
 }
