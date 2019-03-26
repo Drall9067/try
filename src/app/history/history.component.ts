@@ -11,19 +11,19 @@ export class HistoryComponent implements OnInit {
 
   // userData: any;
 
-  // userData = {
-  //   'history' : {
-  //     'vehicle' : [10,5,8,7,12,8,6,10,9,5,5,9,3,4,10,6,10,7,5,9],
-  //     'drowsiness' : [0,2,0,0,3,1,0,1,0,2,2,2,1,0,2,1,1,0,2,0]
-  //   }
-  // }
-  userData: any;
+  userData = {
+    'history' : {
+      'vehicle' : [10,5,8,7,12,8,6,10,9,5,5,9,3,4,10,6,10,7,5,9],
+      'drowsiness' : [0,2,0,0,3,1,0,1,0,2,2,2,1,0,2,1,1,0,2,0]
+    }
+  }
+  // userData: any;
   chartVehicle:any;
   chartDrowsiness:any;
   constructor(private dataServie: DataService) { }
 
   ngOnInit() {
-    this.userData = this.dataServie.currentUser;
+    // this.userData = this.dataServie.currentUser;
 
     if(this.userData) {
       var label = [];
@@ -31,7 +31,6 @@ export class HistoryComponent implements OnInit {
       for(i=1; i<=this.userData['history']['vehicle'].length; i++){
         label.push(String(i))
       }
-      console.log(label)
     
       this.chartVehicle = new Chart('canvasVehicle', {
         type : 'line',
@@ -39,7 +38,7 @@ export class HistoryComponent implements OnInit {
           labels : label,
           datasets : [
             {
-              label : '# of encounters',
+              label : '# of Alerts',
               data : this.userData['history']['vehicle'],
               borderColor : 'red',
               fill : true,
@@ -51,6 +50,14 @@ export class HistoryComponent implements OnInit {
           responsive : true,
           legend : {
             display : false
+          },
+          scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value) {if (value % 1 === 0) {return value;}}
+                }
+            }]
           }
         }
       });
@@ -68,7 +75,7 @@ export class HistoryComponent implements OnInit {
           labels : label,
           datasets : [
             {
-              label : '# of drowsiness',
+              label : '# of Alerts',
               data : this.userData['history']['drowsiness'],
               borderColor : 'blue',
               fill : true,
@@ -80,6 +87,14 @@ export class HistoryComponent implements OnInit {
           responsive : true,
           legend : {
             display : false
+          },
+          scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value) {if (value % 1 === 0) {return value;}}
+                }
+            }]
           }
         }
       });
