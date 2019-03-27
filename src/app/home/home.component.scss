@@ -1,0 +1,95 @@
+@font-face {
+    font-family: 'BladeRunner';
+    src : url("Blade_Runner.ttf") format('truetype');
+}
+
+.appName {
+    font-family: 'BladeRunner';
+    color: black;
+    text-align: center;
+    font-size: 4rem;
+    text-shadow: 10px 10px rgba(0, 168, 255, 0.35);
+    -webkit-text-stroke-color: #00a8ff;
+    -webkit-text-stroke-width: 3px;
+    animation-name: strokeColor;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+}
+
+.appDesc {
+    font-size: 2rem;
+    color: black;
+    font-family: 'BladeRunner';
+    -webkit-text-stroke-color: #00a8ff;
+    -webkit-text-stroke-width: 1px;
+}
+
+.card {
+    border: 0;
+    background-color: #00a8ff;
+    cursor: pointer !important;
+}
+
+.card:hover{
+    transform: scale(1.05, 1.05);
+    box-shadow: 0 0 20px rgba(0, 168, 255, 1);
+    transition: all 0.3s;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+@keyframes strokeColor {
+    0% {
+        -webkit-text-stroke-color: #00a8ff;
+    }
+    5% {
+        -webkit-text-stroke-color: white;
+    }
+    7% {
+        -webkit-text-stroke-color: #00a8ff;
+    }
+    20% {
+        -webkit-text-stroke-color: white;
+    }
+    30% {
+        -webkit-text-stroke-color: #00a8ff;
+    }
+}
+
+@media only screen and (min-width: 420px){
+    .appName {
+        font-size: 3rem;
+        text-shadow: 10px 10px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 2px;
+    }
+    .appDesc {
+        font-size: 2rem;
+        -webkit-text-stroke-width: 1px;
+    }
+}
+
+@media only screen and (min-width: 780px){
+    .appName {
+        font-size: 10rem;
+        text-shadow: 13px 13px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 5px;
+    }
+    .appDesc {
+        font-size: 2.5rem;
+        -webkit-text-stroke-width: 2px;
+    }
+}
+
+@media only screen and (min-width: 1020px){
+    .appName {
+        font-size: 13rem;
+        text-shadow: 15px 15px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 6px;
+    }
+    .appDesc {
+        font-size: 3rem;
+        -webkit-text-stroke-width: 3px;
+    }
+}

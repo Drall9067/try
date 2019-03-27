@@ -9,21 +9,19 @@ import { Chart } from 'chart.js';
 })
 export class HistoryComponent implements OnInit {
 
-  // userData: any;
-
-  userData = {
-    'history' : {
-      'vehicle' : [10,5,8,7,12,8,6,10,9,5,5,9,3,4,10,6,10,7,5,9],
-      'drowsiness' : [0,2,0,0,3,1,0,1,0,2,2,2,1,0,2,1,1,0,2,0]
-    }
-  }
-  // userData: any;
+  // userData = {
+  //   'history' : {
+  //     'vehicle' : [10,5,8,7,12,8,6,10,9,5,5,9,3,4,10,6,10,7,5,9],
+  //     'drowsiness' : [0,2,0,0,3,1,0,1,0,2,2,2,1,0,2,1,1,0,2,0]
+  //   }
+  // }
+  userData: any;
   chartVehicle:any;
   chartDrowsiness:any;
   constructor(private dataServie: DataService) { }
 
   ngOnInit() {
-    // this.userData = this.dataServie.currentUser;
+    this.userData = this.dataServie.currentUser;
 
     if(this.userData) {
       var label = [];
