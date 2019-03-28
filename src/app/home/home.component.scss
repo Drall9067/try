@@ -25,18 +25,85 @@
 }
 
 .card {
+    color: white;
     border: 0;
-    background-color: #00a8ff;
+    background-color: black;
+    border-radius: 1rem;
     cursor: pointer !important;
 }
 
 .card:hover{
     transform: scale(1.05, 1.05);
-    box-shadow: 0 0 20px rgba(0, 168, 255, 1);
+    box-shadow: 0 0 10px rgba(0, 168, 255, 1);
     transition: all 0.3s;
 }
 
+.card-img-top {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
 .card-title {
+    font-weight: bold;
+}
+
+.appNameSmall {
+    margin: auto;
+    font-family: 'BladeRunner';
+    color: black;
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 6px 6px rgba(0, 168, 255, 0.35);
+    -webkit-text-stroke-color: #00a8ff;
+    -webkit-text-stroke-width: 1px;
+    animation-name: strokeColor;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+}
+
+.iconList {
+    width: 100%;
+    list-style: none;
+    margin: auto;
+    display: flex;
+}
+
+.icon {
+    margin: auto;
+    flex-direction: row;
+    padding: 10px;
+    text-align: center;
+    height: 100%;
+
+    a {
+        margin: auto;
+        font-size: 1.5rem;
+        color: #fff;
+        display: block;
+
+        :hover {
+            cursor: pointer;
+            color: #00a8ff !important;
+            transform: scale(1.3, 1.3);
+            transition: all 0.15s ease-in;
+        }
+    }
+}
+
+.endText {
+    color: gray;
+    font-size: 0.7rem;    
+}
+
+.fa-heart:hover {
+    cursor: pointer;
+    transform: scale(1.2, 1.2);
+    transition: all 0.2s ease-in;
+}
+
+.teamName {
+    font-size: 0.6rem;
+    color: white;
     font-weight: bold;
 }
 
@@ -58,19 +125,38 @@
     }
 }
 
-@media only screen and (min-width: 420px){
+@media (min-width: 420px){
     .appName {
-        font-size: 3rem;
+        font-size: 4rem;
         text-shadow: 10px 10px rgba(0, 168, 255, 0.4);
-        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-width: 3px;
     }
     .appDesc {
         font-size: 2rem;
         -webkit-text-stroke-width: 1px;
     }
+    .appNameSmall {
+        font-size: 1.5rem;
+        text-shadow: 5px 5px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 1px;
+    }
+    .iconList {
+        width: 100%;
+    }
+    .icon {
+        a {
+            font-size: 1.5rem;
+        }
+    }
+    .teamName {
+        font-size: 0.6rem;
+    }
+    .endText {
+        font-size: 0.7rem;
+    }
 }
 
-@media only screen and (min-width: 780px){
+@media (min-width: 780px){
     .appName {
         font-size: 10rem;
         text-shadow: 13px 13px rgba(0, 168, 255, 0.4);
@@ -80,9 +166,28 @@
         font-size: 2.5rem;
         -webkit-text-stroke-width: 2px;
     }
+    .appNameSmall {
+        font-size: 2.5rem;
+        text-shadow: 8px 8px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 2px;
+    }
+    .iconList {
+        width: 80%;
+    }
+    .icon {
+        a {
+            font-size: 1.8rem;
+        }
+    }
+    .teamName {
+        font-size: 0.8rem;
+    }
+    .endText {
+        font-size: 0.9rem;
+    }
 }
 
-@media only screen and (min-width: 1020px){
+@media (min-width: 1020px){
     .appName {
         font-size: 13rem;
         text-shadow: 15px 15px rgba(0, 168, 255, 0.4);
@@ -91,5 +196,24 @@
     .appDesc {
         font-size: 3rem;
         -webkit-text-stroke-width: 3px;
+    }
+    .appNameSmall {
+        font-size: 4rem;
+        text-shadow: 10px 10px rgba(0, 168, 255, 0.4);
+        -webkit-text-stroke-width: 3px;
+    }
+    .iconList {
+        width: 60%;
+    }
+    .icon {
+        a {
+            font-size: 2rem;
+        }
+    }
+    .teamName {
+        font-size: 1rem;
+    }
+    .endText {
+        font-size: 1.1rem;
     }
 }
