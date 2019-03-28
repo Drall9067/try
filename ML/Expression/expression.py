@@ -28,8 +28,16 @@ def getExpression(img):
         frame = np.array(frame, dtype='float32').reshape(-1,48,48,1)/255.0
         
         y = expressionModel.predict(frame)[0]
+        y = np.argmax(y)
 
-        return expressionDictionary[np.argmax(y)]
+        if(y==1):
+            return 'happy'
+        if(y==2):
+            return 'relaxed'
+        if(y==5):
+            return 'energetic'
 
-    return ''
+        return expressionDictionary[y]
+
+    return 'happy'
         

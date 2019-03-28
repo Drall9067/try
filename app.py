@@ -23,6 +23,45 @@ client = pymongo.MongoClient("mongodb+srv://meanMachines:hacknsut@myappcluster-z
 db = client['userDatabase']
 col = db['userCollection']
 
+dic = {
+    'angry' : {
+        'ind' : 0,
+        'url' : []
+    },
+    'energetic' : {
+        'ind' : 0,
+        'url' : []
+    },
+    'happy' : {
+        'ind' : 0,
+        'url' : []
+    },
+    'neutral' : {
+        'ind' : 0,
+        'url' : []
+    },
+    'relaxed' : {
+        'ind' : 0,
+        'url' : []
+    },
+    'sad' : {
+        'ind' : 0,
+        'url' : []
+    }
+}
+
+with open('./Songs/songs.txt') as f:
+    lines = f.readlines()
+    key = ''
+    for line in lines:
+        line = line[:-1]
+
+        if line in dic.keys():
+            key = line
+            continue
+        
+        dic[key]['url'].append(line)
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -80,11 +119,14 @@ class emotionAPI(Resource):
           data = cv2.imdecode(np.fromstring(data.read(), np.uint8), 1)
           data = cv2.cvtColor(data,cv2.COLOR_BGR2RGB)
           
-          data = engine.detectExpression(data)
-          print()
-          print("Data",data,sep=" : ")
-          print()
-          return { 'message' : data }
+          exp = engine.detectExpression(data)
+          print(exp)
+          ind = dic[exp]['ind']
+          data = dic[exp]['url'][ind]
+          print("Playing",data,sep=" : ")
+          dic[exp]['ind'] = (dic[exp]['ind'] + 1) % (len(dic[exp]['url']))
+
+          return { 'url' : data }
 
 class frontAPI(Resource):
      def get(self):

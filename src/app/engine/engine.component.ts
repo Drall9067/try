@@ -104,7 +104,8 @@ export class EngineComponent implements OnInit {
 
       this.data_service.sendEmotionFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
-          this.status = res['message'];
+          this.songAudioURL = res['url'];
+          this.startSongAudio();
           console.log("Emotion Image Sent");
           resolve('Done');
         });
@@ -237,6 +238,12 @@ export class EngineComponent implements OnInit {
     this.mlEngine = false;
     this.allowSend = true;
     clearInterval(this.timer);
+    if(this.songAudio) {
+      this.songAudio.pause();
+    }
+    if(this.alertAudio) {
+      this.alertAudio.pause();
+    }
     this.status = "";
   }
 
@@ -244,14 +251,11 @@ export class EngineComponent implements OnInit {
     if(this.songAudio) {
       this.songAudio.pause();
     }
-    this.songAudioURL = 'http://ganasong.in/siteuploads/files/sfd1/297/Coka%20(%20Sukh-e)%20Mp3%20Song%20320kbps-(GanaSong).mp3';
     this.songAudio = new Audio(this.songAudioURL);
     this.songAudio.onended = () => {
       if (this.frontCamera) {
         console.log("Done");
-        //detect expression
-        //select song
-        //startPipeline
+        this.startPipeline();
       }
     }
     this.songAudio.play();
@@ -259,9 +263,6 @@ export class EngineComponent implements OnInit {
 
   startAlertAudio() {
     this.alertAudio.play();
-    this.alertAudio.onended = () =>{
-      console.log("Ended");
-    }
   }
 
 }
