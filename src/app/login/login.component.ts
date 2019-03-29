@@ -36,14 +36,19 @@ export class LoginComponent implements OnInit {
   }
 
   submitForm(data) {
-    this.loginStatus = true;
-    console.log(data)
-    this.dataService.checkUser(data).subscribe((res) => {
-      if(res) {
-        this.router.navigate(['../dashboard'])
-      }
-      this.loginStatus = false
-    });
+    if(this.rForm.valid) {
+      this.loginStatus = true;
+      console.log(data)
+      this.dataService.checkUser(data).subscribe((res) => {
+        if(res) {
+          this.router.navigate(['../dashboard'])
+        }
+        this.loginStatus = false
+      });
+    }
+    else{
+      this.loginStatus = false;
+    }
   }
 
 }

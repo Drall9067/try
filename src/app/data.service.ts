@@ -46,6 +46,14 @@ export class DataService {
     );
   }
 
+  updateUser(data) {
+    return this.http.post('api/updateUser', { 'user' : data }).pipe(
+      map((res) => {
+        return res;
+      })
+    );
+  }
+
   sendEmotionFrame(image) {
     return this.http.post('api/emotionImage', { 'image' : image }).pipe(
       map((res) => {

@@ -157,7 +157,7 @@ export class EngineComponent implements OnInit {
       
       this.captureBatch()
       .then(()=>{
-        if(this.imagesData.length<20) {
+        if(this.imagesData.length<5) {
           resolve('Done')
         }
         else {

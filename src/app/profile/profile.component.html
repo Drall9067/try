@@ -1,3 +1,65 @@
-<h2 style="text-align:center">
-  Profile
-</h2>
+<div class="container text-center mt-4 pt-5 mb-5 pb-5">
+  <div class="container image">
+    <img src="https://i.ibb.co/S5zwndd/oie-transparent.png">
+  </div>
+  <div class="container-well mt-3 pt-3">
+    <h1 class="display-1 welcomeMsg">Welcome <span class="userName">{{ user.firstname }}</span>!</h1>
+  </div>
+</div>
+
+<div class="container registerForm mt-4 pt-4">
+  <form [formGroup]="rForm" class="form-container">
+    <div class="form-group">
+      <label for="inputName1">First Name</label>
+      <input type="text" formControlName="firstname" class="form-control" id="inputName1" aria-describedby="name1Help" placeholder="Enter first name...">
+      <small id="name1Help" class="form-text text-muted alert" *ngIf="!rForm.controls['firstname'].valid && rForm.controls['firstname'].touched">
+        You must have a name!
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="inputName2">Last Name</label>
+      <input type="text" formControlName="lastname" class="form-control" id="inputName2" aria-describedby="name2Help" placeholder="Enter last name...">
+      <small id="name2Help" class="form-text text-muted alert" *ngIf="!rForm.controls['lastname'].valid && rForm.controls['lastname'].touched">
+        You must have a name!
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="inputGender">Gender</label>
+      <select formControlName="gender" class="form-control" id="inputGender" aria-describedby="genderHelp">
+        <option *ngFor="let gen of genders" [value]="gen">
+          {{ gen }}
+        </option>
+      </select>
+      <small id="genderHelp" class="form-text text-muted alert" *ngIf="!rForm.controls['gender'].valid && rForm.controls['gender'].touched">
+        You need to select something!
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="inputEmail1">Email ID</label>
+      <input type="email" formControlName="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Enter email...">
+      <small id="emailHelp" class="form-text text-muted alert" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">
+        The format's incorrect!
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="inputPassword1">Password</label>
+      <input type="password" formControlName="password" class="form-control" id="inputPassword1" aria-describedby="passwordHelp" placeholder="Enter password...">
+      <small id="passwordHelp" class="form-text text-muted alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
+        Atleast 8 alphanumeric characters with a symbol!
+      </small>
+    </div>
+
+    <div class="container text-center alert" style="color : red" *ngIf="!registerStatus">
+      Field empty or someone owns that email id!
+    </div>
+    <div class="container text-center">
+      <div class="btn">
+          <a class="button" (click)="submitForm(rForm.value)">Save Profile</a>
+      </div>
+    </div>
+  </form>
+</div>

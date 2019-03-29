@@ -104,6 +104,19 @@ class addUser(Resource):
           data = json.loads(json_util.dumps(data))
           return jsonify({ "user" : data })
 
+class updateUser(Resource):
+     def get(self):
+          pass
+
+     def post(self):
+          data = request.data
+          data = data.decode("utf-8")
+          data = json.loads(data)
+
+          data = data['user']
+          pass
+
+
 class emotionAPI(Resource):
      def get(self):
           pass

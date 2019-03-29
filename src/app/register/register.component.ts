@@ -58,19 +58,24 @@ export class RegisterComponent implements OnInit {
   }
 
   submitForm(data) {
-    this.registerStatus = true;
-    var newData = data;
-    newData['history'] = {
-      'vehicle' : [],
-      'drowsiness' : []
-    }
-    console.log(newData);
-    this.dataService.addUser(newData).subscribe((res) => {
-      if(res) {
-        this.router.navigate(['../dashboard'])
+    if(this.rForm.valid) {
+      this.registerStatus = true;
+      var newData = data;
+      newData['history'] = {
+        'vehicle' : [],
+        'drowsiness' : []
       }
+      console.log(newData);
+      this.dataService.addUser(newData).subscribe((res) => {
+        if(res) {
+          this.router.navigate(['../dashboard'])
+        }
+        this.registerStatus = false;
+      });
+    }
+    else {
       this.registerStatus = false;
-    });
+    }
   }
 
 }

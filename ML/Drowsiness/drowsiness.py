@@ -19,7 +19,7 @@ predictor = dlib.shape_predictor('./ML/Drowsiness/file.dat')
 
 def getDrowsiness(imgarray):
 	ct = 0
-	for i in range(20):
+	for i in range(5):
 		
 		img = imgarray[i]
 		img = imutils.resize(img, width = 800)
@@ -39,7 +39,7 @@ def getDrowsiness(imgarray):
 			if(finalear < earthreshold):
 				ct += 1
 
-	if(ct > 10):
+	if(ct > 3):
 		return '1'
 	return '0'
 		

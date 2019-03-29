@@ -44,8 +44,8 @@
       </small>
     </div>
 
-    <div class="container text-center" style="color : red" *ngIf="!registerStatus" style="text-align:center">
-      Someone owns that email id!
+    <div class="container text-center alert" style="color : red" *ngIf="!registerStatus">
+      Field empty or someone owns that email id!
     </div>
     <div class="container text-center">
       <div class="btn">
