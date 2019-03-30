@@ -186,6 +186,8 @@ export class EngineComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log("Sending Image...");
       this.triggerSnapshot();
+      this.images = []
+      this.images.push(this.webcamImage['imageAsDataUrl']);
 
       this.data_service.sendRearFrame(this.webcamImage['imageAsBase64'])
       .subscribe((res) => {
@@ -230,7 +232,7 @@ export class EngineComponent implements OnInit {
             this.allowSend = true
           });
         }
-      },500);
+      },100);
     }
   }
 
