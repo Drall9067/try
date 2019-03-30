@@ -139,7 +139,7 @@ class emotionAPI(Resource):
           print("Playing",data,sep=" : ")
           dic[exp]['ind'] = (dic[exp]['ind'] + 1) % (len(dic[exp]['url']))
 
-          return { 'mood' : exp.capitalise(),  'url' : data }
+          return { 'mood' : exp.capitalize(),  'url' : data }
 
 class frontAPI(Resource):
      def get(self):
