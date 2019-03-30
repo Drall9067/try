@@ -18,7 +18,7 @@ import ML.engine as engine
 app = Flask(__name__, static_url_path='', static_folder='dist/myapp')
 api = Api(app)
 CORS(app)
-client = pymongo.MongoClient("mongodb+srv://meanMachines:hacknsut@myappcluster-zyfjx.mongodb.net/userDatabase",connect=True)
+client = pymongo.MongoClient("mongodb+srv://meanMachines:hacknsut@myappcluster-zyfjx.mongodb.net/userDatabase?retryWrites=true",connect=True)
 
 db = client['userDatabase']
 col = db['userCollection']
@@ -139,7 +139,7 @@ class emotionAPI(Resource):
           print("Playing",data,sep=" : ")
           dic[exp]['ind'] = (dic[exp]['ind'] + 1) % (len(dic[exp]['url']))
 
-          return { 'url' : data }
+          return { 'mood' : exp.capitalise(),  'url' : data }
 
 class frontAPI(Resource):
      def get(self):

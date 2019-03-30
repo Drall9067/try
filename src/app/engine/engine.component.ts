@@ -15,6 +15,7 @@ export class EngineComponent implements OnInit {
   imagesData : Array<any> = [];
 
   status: string = "";
+  mood: string = "";
 
   showWebcam = true;
   allowCameraSwitch = false;
@@ -105,6 +106,7 @@ export class EngineComponent implements OnInit {
       this.data_service.sendEmotionFrame(this.webcamImage['imageAsBase64'])
         .subscribe((res) => {
           this.songAudioURL = res['url'];
+          this.mood = res['mood'];
           this.startSongAudio();
           console.log("Emotion Image Sent");
           resolve('Done');
@@ -239,6 +241,7 @@ export class EngineComponent implements OnInit {
   stopPipeline() {
     this.mlEngine = false;
     this.allowSend = true;
+    this.mood = "";
     clearInterval(this.timer);
     if(this.songAudio) {
       this.songAudio.pause();
